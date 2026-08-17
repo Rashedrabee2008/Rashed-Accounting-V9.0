@@ -6,13 +6,16 @@
     <title>🏆 نظام راشد المحاسبي V11 - المتكامل</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#6C5CE7">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👑</text></svg>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <!-- Firebase SDK (اختياري) -->
+    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics-compat.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
@@ -79,7 +82,6 @@
         .badge-tag { padding: 2px 10px; border-radius: 10px; font-size: 10px; font-weight: 600; color: white; display: inline-block; }
         .badge-tag.client { background: var(--secondary); }
         .badge-tag.supplier { background: var(--accent); color: #2C3E50; }
-        .badge-tag.both { background: linear-gradient(135deg, var(--primary), var(--secondary)); }
         .badge-tag.return { background: var(--danger); }
         .search-box { display: flex; gap: 6px; margin: 6px 0 10px; flex-wrap: wrap; }
         .search-box input, .search-box select { flex: 1 1 100px; padding: 8px 14px; border-radius: 8px; border: 1px solid var(--border); background: var(--card); color: var(--text); font-size: 13px; outline: none; transition: var(--transition); }
@@ -129,8 +131,29 @@
         .marketing-header { text-align: center; padding: 40px 20px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); border-radius: var(--radius); color: white; margin-bottom: 20px; }
         .marketing-header .logo { font-size: 48px; color: var(--accent); }
         .marketing-header h1 { font-size: 36px; margin: 10px 0; }
+        .marketing-header p { font-size: 18px; opacity: 0.9; max-width: 600px; margin: 0 auto 20px; }
         .btn-enter { display: inline-block; padding: 14px 40px; border-radius: 10px; border: none; background: var(--accent); color: #2C3E50; font-weight: 700; font-size: 18px; cursor: pointer; transition: var(--transition); }
         .btn-enter:hover { transform: scale(1.05); box-shadow: 0 8px 30px rgba(253,203,110,0.3); }
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 20px 0; }
+        .feature-card { background: var(--card); padding: 20px; border-radius: var(--radius-sm); text-align: center; border: 1px solid var(--border); transition: var(--transition); color: var(--text); }
+        .feature-card:hover { transform: translateY(-5px); box-shadow: var(--shadow); }
+        .feature-card i { font-size: 30px; color: var(--primary); margin-bottom: 10px; }
+        .feature-card h3 { font-size: 16px; margin-bottom: 6px; }
+        .feature-card p { font-size: 12px; color: var(--text2); }
+        .pricing-section { background: var(--card); border-radius: var(--radius); padding: 24px; margin: 20px 0; text-align: center; border: 1px solid var(--border); color: var(--text); }
+        .pricing-section h2 { font-size: 24px; margin-bottom: 8px; }
+        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px; }
+        .pricing-card { background: var(--bg); border-radius: var(--radius-sm); padding: 20px; border: 2px solid var(--border); transition: var(--transition); }
+        .pricing-card:hover { border-color: var(--primary); }
+        .pricing-card .price { font-size: 28px; font-weight: 700; color: var(--primary); }
+        .pricing-card ul { list-style: none; margin: 12px 0; text-align: right; }
+        .pricing-card ul li { padding: 4px 0; font-size: 13px; color: var(--text2); }
+        .pricing-card .btn { padding: 8px 24px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; transition: var(--transition); }
+        .pricing-card .btn-free { background: var(--secondary); color: white; }
+        .pricing-card .btn-paid { background: var(--accent); color: #2C3E50; }
+        .pricing-card .btn:hover { transform: scale(1.05); }
+        .pricing-card.featured { border-color: var(--accent); }
+        .marketing-footer { text-align: center; padding: 15px; font-size: 12px; color: var(--text3); }
         .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 99998; display: none; justify-content: center; align-items: center; backdrop-filter: blur(4px); }
         .modal-overlay.active { display: flex; }
         .modal-box { background: var(--card); width: 95%; max-width: 600px; max-height: 90vh; overflow-y: auto; border-radius: var(--radius); padding: 20px; border: 2px solid var(--primary); animation: modalUp 0.3s ease; }
@@ -138,11 +161,6 @@
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 2px solid var(--border); }
         .modal-header h2 { font-size: 18px; display: flex; align-items: center; gap: 6px; color: var(--text); }
         .modal-header .close-btn { background: none; border: none; font-size: 24px; color: var(--text2); cursor: pointer; }
-        @media (max-width: 480px) { .app-container { padding: 10px; } .header .brand { font-size: 16px; } .stats-grid { grid-template-columns: repeat(2, 1fr); } .input-row { flex-direction: column; } .input-row input, .input-row select, .input-row button { width: 100%; } .tab-btn { font-size: 10px; padding: 4px 10px; } .list-item { flex-direction: column; align-items: stretch; gap: 4px; } .list-item .actions { justify-content: center; } }
-        .theme-toggle { background: var(--bg); border: 1px solid var(--border); border-radius: 20px; padding: 4px 12px; cursor: pointer; color: var(--text); font-size: 14px; transition: var(--transition); }
-        .theme-toggle:hover { background: var(--primary); color: white; }
-        .stock-info { background: var(--primary-light); color: white; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 4px; }
-        .auth-box .subtitle { text-align: center; font-size: 13px; color: var(--text2); margin-bottom: 14px; }
         .cloud-status { display: flex; align-items: center; gap: 8px; font-size: 12px; padding: 4px 12px; border-radius: 12px; background: var(--bg); border: 1px solid var(--border); }
         .cloud-status.online { color: var(--secondary); border-color: var(--secondary); }
         .cloud-status.offline { color: var(--danger); border-color: var(--danger); }
@@ -161,21 +179,76 @@
         .chart-box:hover { border-color: var(--primary-light); }
         .chart-box h4 { font-size: 11px; font-weight: 600; text-align: center; color: var(--text2); margin-bottom: 4px; }
         .chart-box canvas { height: 120px; width: 100%; max-height: 120px; }
+        .stock-info { background: var(--primary-light); color: white; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 4px; }
+        .auth-box .subtitle { text-align: center; font-size: 13px; color: var(--text2); margin-bottom: 14px; }
+        .theme-toggle { background: var(--bg); border: 1px solid var(--border); border-radius: 20px; padding: 4px 12px; cursor: pointer; color: var(--text); font-size: 14px; transition: var(--transition); }
+        .theme-toggle:hover { background: var(--primary); color: white; }
+        @media (max-width: 480px) { .app-container { padding: 10px; } .header .brand { font-size: 16px; } .stats-grid { grid-template-columns: repeat(2, 1fr); } .input-row { flex-direction: column; } .input-row input, .input-row select, .input-row button { width: 100%; } .tab-btn { font-size: 10px; padding: 4px 10px; } .list-item { flex-direction: column; align-items: stretch; gap: 4px; } .list-item .actions { justify-content: center; } .charts-grid { grid-template-columns: 1fr; } .features-grid { grid-template-columns: 1fr 1fr; } .pricing-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
 
-<!-- Marketing Page -->
+<!-- ===== MARKETING PAGE ===== -->
 <div class="marketing-page active" id="marketingPage">
     <div class="marketing-header">
         <div class="logo"><i class="fas fa-crown"></i></div>
         <h1>🏆 نظام راشد المحاسبي V11</h1>
-        <p>النظام المتكامل لإدارة المبيعات والمشتريات والمرتجعات والمخزون والخزنة والعملاء والموردين مع تقارير متقدمة وذكاء اصطناعي</p>
+        <p>الحل المتكامل لإدارة أعمالك - مبيعات، مشتريات، مرتجعات، مخزون، خزنة، عملاء، موردين، تقارير متقدمة وذكاء اصطناعي</p>
         <button class="btn-enter" onclick="showAuth()"><i class="fas fa-arrow-left"></i> دخول التطبيق</button>
+    </div>
+
+    <div class="features-grid">
+        <div class="feature-card"><i class="fas fa-users"></i><h3>العملاء والموردين</h3><p>إدارة متقدمة مع ربط بالمبيعات والمشتريات</p></div>
+        <div class="feature-card"><i class="fas fa-money-bill-wave"></i><h3>الخزنة</h3><p>إيداع، سحب، تحصيل، تسديد، مصروفات</p></div>
+        <div class="feature-card"><i class="fas fa-file-invoice"></i><h3>المبيعات والمشتريات</h3><p>فواتير مع ربط بالخزنة والمخزون والعملاء والموردين</p></div>
+        <div class="feature-card"><i class="fas fa-boxes"></i><h3>المخزون الذكي</h3><p>متابعة الكميات والأسعار مع تحديث تلقائي</p></div>
+        <div class="feature-card"><i class="fas fa-undo"></i><h3>المرتجعات</h3><p>مرتجعات المبيعات والمشتريات مع تحديث كل الأرصدة</p></div>
+        <div class="feature-card"><i class="fas fa-chart-line"></i><h3>التقارير</h3><p>ميزان المراجعة، قائمة الدخل، الميزانية، التدفق النقدي، KPI</p></div>
+    </div>
+
+    <div class="pricing-section">
+        <h2>💰 خطط الأسعار</h2>
+        <p>ابدأ مجاناً وارتقِ باحتياجاتك</p>
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <h3>📋 مجاني</h3>
+                <div class="price">0 ج.م</div>
+                <ul><li>✅ كل الميزات الأساسية</li><li>✅ غير محدود للكل</li><li>✅ تقارير أساسية</li></ul>
+                <button class="btn btn-free" onclick="showAuth()">ابدأ مجاناً</button>
+            </div>
+            <div class="pricing-card featured">
+                <h3>⭐ بريميوم</h3>
+                <div class="price">99 ج.م</div>
+                <ul><li>✅ كل الميزات</li><li>✅ غير محدود للكل</li><li>✅ تقارير متقدمة</li><li>✅ سحابة غير محدودة</li></ul>
+                <button class="btn btn-paid" onclick="showPayment()">اشتر الآن</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="marketing-footer">
+        <p>© 2026 نظام راشد المحاسبي V11 - جميع الحقوق محفوظة</p>
     </div>
 </div>
 
-<!-- Auth -->
+<!-- ===== PAYMENT MODAL ===== -->
+<div class="modal-overlay" id="paymentModal" onclick="if(event.target===this) closePayment()">
+    <div class="modal-box">
+        <div class="modal-header"><h2><i class="fas fa-crown" style="color:var(--primary);"></i> ترقية الباقة</h2><button class="close-btn" onclick="closePayment()"><i class="fas fa-times"></i></button></div>
+        <div style="text-align:center;padding:10px;">
+            <p style="font-size:13px;color:var(--text2);">اختر طريقة الدفع المناسبة</p>
+            <button onclick="processPayment('vodafone')" style="width:100%;padding:12px;margin:6px 0;border:none;border-radius:8px;background:#E17055;color:white;font-weight:700;font-size:16px;cursor:pointer;"><i class="fas fa-mobile-alt"></i> فودافون كاش</button>
+            <button onclick="processPayment('instapay')" style="width:100%;padding:12px;margin:6px 0;border:none;border-radius:8px;background:#00B894;color:white;font-weight:700;font-size:16px;cursor:pointer;"><i class="fas fa-university"></i> إنستاباي</button>
+            <button onclick="processPayment('credit')" style="width:100%;padding:12px;margin:6px 0;border:none;border-radius:8px;background:var(--primary);color:white;font-weight:700;font-size:16px;cursor:pointer;"><i class="fas fa-credit-card"></i> بطاقة ائتمان</button>
+            <div style="margin-top:10px;padding:12px;background:var(--bg);border-radius:8px;font-size:12px;color:var(--text2);">
+                <p>📱 فودافون كاش: <strong style="color:var(--primary);">01011993799</strong></p>
+                <p>🏦 إنستاباي: <strong style="color:var(--primary);">rashedrabia@instapay</strong></p>
+                <p style="font-size:11px;color:var(--text3);">⏳ سيتم تفعيل الباقة خلال 24 ساعة</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== AUTH ===== -->
 <div class="auth-overlay" id="authOverlay">
     <div class="auth-box">
         <h2><i class="fas fa-crown" style="color:var(--accent);"></i> نظام راشد المحاسبي</h2>
@@ -199,7 +272,7 @@
     </div>
 </div>
 
-<!-- App -->
+<!-- ===== APP ===== -->
 <div class="app-container" id="appContainer">
     <div class="header">
         <div class="brand" onclick="handleBrandClick()"><i class="fas fa-crown"></i> راشد <span>V11</span></div>
@@ -481,11 +554,10 @@
                 </div>
             </div>
         </div>
-
     </div>
 </div>
 
-<!-- Modal -->
+<!-- ===== MODAL ===== -->
 <div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this) closeModal()">
     <div class="modal-box">
         <div class="modal-header"><h2 id="modalTitle"><i class="fas fa-robot"></i> التفاصيل</h2><button class="close-btn" onclick="closeModal()"><i class="fas fa-times"></i></button></div>
@@ -493,12 +565,15 @@
     </div>
 </div>
 
-<!-- Toast -->
+<!-- ===== TOAST ===== -->
 <div id="toast" class="toast"></div>
 
 <script>
 // ============================================================
 // 🚀 نظام راشد المحاسبي V11 - المتكامل
+// كل الأقسام متربطة ببعضها: المبيعات، المشتريات، المرتجعات،
+// المخزون، الخزنة، العملاء، الموردين، التقارير، المحاسبة،
+// الذكاء الاصطناعي، السحابة
 // ============================================================
 
 // ============================================================
@@ -758,7 +833,7 @@ function addCashierTransaction() {
 }
 
 // ============================================================
-// 🔷 المبيعات (ربط بالمخزون والعملاء والخزنة)
+// 🔷 المبيعات (ربط: المخزون ← العملاء ← الخزنة)
 // ============================================================
 function addSale() {
     const client = document.getElementById('saleClient').value;
@@ -774,11 +849,14 @@ function addSale() {
     if (!prod || prod.quantity < qty) { showToast(`⚠️ الكمية غير متوفرة (المتاح: ${prod ? prod.quantity : 0})`, 'error'); return; }
 
     const total = qty * price * (1 - discount / 100);
+    // 1. تحديث المخزون
     prod.quantity -= qty;
+    // 2. تحديث رصيد العميل (آجل)
     if (payment === 'آجل') {
         const cl = appData.clients.find(c => c.name === client);
         if (cl) cl.balance = (cl.balance || 0) + total;
     }
+    // 3. تسجيل في الخزنة (نقدي)
     if (payment === 'نقدي') {
         appData.cashier.push({ id: generateId(), type: 'إيداع', amount: total, note: `فاتورة بيع - ${client}`, date });
     }
@@ -787,7 +865,7 @@ function addSale() {
 }
 
 // ============================================================
-// 🔷 المشتريات (ربط بالمخزون والموردين والخزنة)
+// 🔷 المشتريات (ربط: المخزون ← الموردين ← الخزنة)
 // ============================================================
 function addPurchase() {
     const supplier = document.getElementById('purchaseSupplier').value;
@@ -803,11 +881,14 @@ function addPurchase() {
     if (!prod) { showToast('⚠️ المنتج غير موجود', 'error'); return; }
 
     const total = qty * price * (1 - discount / 100);
+    // 1. تحديث المخزون
     prod.quantity += qty;
+    // 2. تحديث رصيد المورد (آجل)
     if (payment === 'آجل') {
         const sp = appData.suppliers.find(s => s.name === supplier);
         if (sp) sp.balance = (sp.balance || 0) + total;
     }
+    // 3. تسجيل في الخزنة (نقدي)
     if (payment === 'نقدي') {
         appData.cashier.push({ id: generateId(), type: 'سحب', amount: total, note: `فاتورة شراء - ${supplier}`, date });
     }
@@ -816,7 +897,7 @@ function addPurchase() {
 }
 
 // ============================================================
-// 🔷 المرتجعات (ربط بالمخزون والعملاء/الموردين والخزنة)
+// 🔷 مرتجعات المبيعات (ربط: المخزون ← العملاء ← الخزنة)
 // ============================================================
 function addReturnSale() {
     const invoiceId = document.getElementById('returnSaleInvoice').value;
@@ -830,12 +911,15 @@ function addReturnSale() {
     if (qty > sale.qty) { showToast(`⚠️ كمية المرتجع ${qty} أكبر من الكمية المباعة ${sale.qty}`, 'error'); return; }
 
     const returnAmount = qty * sale.price * (1 - sale.discount / 100);
+    // 1. إرجاع المخزون
     const prod = appData.products.find(p => p.name === sale.product);
     if (prod) prod.quantity += qty;
+    // 2. تعديل رصيد العميل
     if (sale.payment === 'آجل') {
         const cl = appData.clients.find(c => c.name === sale.client);
         if (cl) cl.balance = Math.max(0, (cl.balance || 0) - returnAmount);
     }
+    // 3. تسجيل في الخزنة (سحب للمرتجع)
     if (sale.payment === 'نقدي') {
         appData.cashier.push({ id: generateId(), type: 'سحب', amount: returnAmount, note: `مرتجع بيع - ${sale.client}`, date });
     }
@@ -847,6 +931,9 @@ function addReturnSale() {
     saveData(); renderAll(); updateDropdowns(); showToast(`✅ تم تسجيل مرتجع بيع ${currencyFormat(returnAmount)}`, 'success');
 }
 
+// ============================================================
+// 🔷 مرتجعات المشتريات (ربط: المخزون ← الموردين ← الخزنة)
+// ============================================================
 function addReturnPurchase() {
     const invoiceId = document.getElementById('returnPurchaseInvoice').value;
     const qty = parseFloat(document.getElementById('returnPurchaseQty').value) || 1;
@@ -859,12 +946,15 @@ function addReturnPurchase() {
     if (qty > purchase.qty) { showToast(`⚠️ كمية المرتجع ${qty} أكبر من الكمية المشتراة ${purchase.qty}`, 'error'); return; }
 
     const returnAmount = qty * purchase.price * (1 - purchase.discount / 100);
+    // 1. خصم من المخزون
     const prod = appData.products.find(p => p.name === purchase.product);
     if (prod) prod.quantity = Math.max(0, prod.quantity - qty);
+    // 2. تعديل رصيد المورد
     if (purchase.payment === 'آجل') {
         const sp = appData.suppliers.find(s => s.name === purchase.supplier);
         if (sp) sp.balance = Math.max(0, (sp.balance || 0) - returnAmount);
     }
+    // 3. تسجيل في الخزنة (إيداع للمرتجع)
     if (purchase.payment === 'نقدي') {
         appData.cashier.push({ id: generateId(), type: 'إيداع', amount: returnAmount, note: `مرتجع شراء - ${purchase.supplier}`, date });
     }
@@ -989,7 +1079,24 @@ function updateDashboard() {
     document.getElementById('homePurchases').textContent = currencyFormat(totalPurchases);
     document.getElementById('homeProfit').textContent = currencyFormat(totalSales - totalPurchases);
     document.getElementById('homeCashier').textContent = currencyFormat(balance);
+    // تحديث ملخص الذكاء الاصطناعي
+    updateAISummary(totalSales, totalPurchases, balance);
     drawCharts();
+}
+
+function updateAISummary(totalSales, totalPurchases, balance) {
+    const summary = document.getElementById('aiSummary');
+    if (!summary) return;
+    const net = totalSales - totalPurchases;
+    if (net < 0) {
+        summary.innerHTML = `⚠️ عجز مالي: ${currencyFormat(Math.abs(net))}. راجع مصروفاتك وزد مبيعاتك.`;
+    } else if (balance < 0) {
+        summary.innerHTML = `⚠️ رصيد الخزنة سالب (${currencyFormat(balance)}). قلل السحوبات.`;
+    } else if (totalSales > 0 && totalSales > totalPurchases) {
+        summary.innerHTML = `📈 مبيعات: ${currencyFormat(totalSales)} | أرباح: ${currencyFormat(net)} | نسبة الربح: ${toArabic((net/totalSales*100).toFixed(0))}%`;
+    } else {
+        summary.innerHTML = `🌟 أداؤك المالي جيد! صافي الربح: ${currencyFormat(net)}`;
+    }
 }
 
 function updateKPIs() {
@@ -1015,18 +1122,20 @@ function drawCharts() {
     const salesCanvas = document.getElementById('salesChart');
     const cashflowCanvas = document.getElementById('cashflowChart');
     if (!salesCanvas || !cashflowCanvas) return;
-    // تدمير الرسوم القديمة
     Object.keys(chartInstances).forEach(key => { if (chartInstances[key]) { chartInstances[key].destroy(); delete chartInstances[key]; } });
     const months = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو'];
-    const salesData = months.map(() => Math.round(1000 + Math.random() * 5000));
-    const purchaseData = months.map(() => Math.round(800 + Math.random() * 4000));
+    const totalSales = appData.sales.reduce((s, t) => s + t.total, 0);
+    const totalPurchases = appData.purchases.reduce((s, t) => s + t.total, 0);
+    const salesData = months.map(() => Math.round((totalSales / 6) * (0.5 + Math.random() * 1)));
+    const purchaseData = months.map(() => Math.round((totalPurchases / 6) * (0.5 + Math.random() * 1)));
     chartInstances.salesChart = new Chart(salesCanvas, {
         type: 'bar',
         data: { labels: months, datasets: [{ label: 'المبيعات', data: salesData, backgroundColor: 'rgba(0,184,148,0.7)', borderColor: '#00B894', borderWidth: 1 }, { label: 'المشتريات', data: purchaseData, backgroundColor: 'rgba(225,112,85,0.7)', borderColor: '#E17055', borderWidth: 1 }] },
         options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { font: { size: 9 } } } }, scales: { y: { beginAtZero: true, ticks: { font: { size: 9 } } }, x: { ticks: { font: { size: 9 } } } } }
     });
-    const inflow = months.map(() => Math.round(2000 + Math.random() * 3000));
-    const outflow = months.map(() => Math.round(1500 + Math.random() * 2500));
+    const balance = appData.cashier.filter(t => t.type === 'إيداع').reduce((s, t) => s + t.amount, 0) - appData.cashier.filter(t => t.type === 'سحب').reduce((s, t) => s + t.amount, 0);
+    const inflow = months.map(() => Math.round((totalSales + appData.salary) / 6 * (0.7 + Math.random() * 0.6)));
+    const outflow = months.map(() => Math.round((totalPurchases + Math.abs(balance)) / 6 * (0.7 + Math.random() * 0.6)));
     chartInstances.cashflowChart = new Chart(cashflowCanvas, {
         type: 'line',
         data: { labels: months, datasets: [{ label: 'التدفق الداخل', data: inflow, borderColor: '#00B894', backgroundColor: 'rgba(0,184,148,0.1)', fill: true, tension: 0.3 }, { label: 'التدفق الخارج', data: outflow, borderColor: '#E17055', backgroundColor: 'rgba(225,112,85,0.1)', fill: true, tension: 0.3 }] },
@@ -1035,7 +1144,7 @@ function drawCharts() {
 }
 
 // ============================================================
-// 🔷 التقارير المحاسبية
+// 🔷 التقارير المحاسبية (ميزان المراجعة، قائمة الدخل، الميزانية، التدفق النقدي)
 // ============================================================
 function showAccountingReport(type) {
     const c = document.getElementById('accountingReport');
@@ -1051,9 +1160,9 @@ function showAccountingReport(type) {
     const equity = totalAssets - totalLiabilities;
     let html = '';
     if (type === 'trial') {
-        html = `<h4>📋 ميزان المراجعة</h4><table><tr><th>الحساب</th><th>الرصيد</th></tr><tr><td>المبيعات</td><td>${currencyFormat(totalSales)}</td></tr><tr><td>المشتريات</td><td>${currencyFormat(totalPurchases)}</td></tr><tr><td>المصروفات</td><td>${currencyFormat(totalExp)}</td></tr><tr><td>قيمة المخزون</td><td>${currencyFormat(productValue)}</td></tr><tr style="border-top:2px solid var(--border);font-weight:700;"><td>صافي الدخل</td><td style="color:${netIncome >= 0 ? 'var(--secondary)' : 'var(--danger)'};">${currencyFormat(netIncome)}</td></tr></table>`;
+        html = `<h4>📋 ميزان المراجعة</h4><table><tr><th>الحساب</th><th>الرصيد</th></tr><tr><td>المبيعات</td><td>${currencyFormat(totalSales)}</td></tr><tr><td>المشتريات</td><td>${currencyFormat(totalPurchases)}</td></tr><tr><td>المصروفات</td><td>${currencyFormat(totalExp)}</td></tr><tr><td>قيمة المخزون</td><td>${currencyFormat(productValue)}</td></tr><tr><td>الراتب</td><td>${currencyFormat(appData.salary)}</td></tr><tr style="border-top:2px solid var(--border);font-weight:700;"><td>صافي الدخل</td><td style="color:${netIncome >= 0 ? 'var(--secondary)' : 'var(--danger)'};">${currencyFormat(netIncome)}</td></tr></table>`;
     } else if (type === 'income') {
-        html = `<h4>📈 قائمة الدخل</h4><table><tr><th>البيان</th><th>المبلغ</th></tr><tr><td>الإيرادات (الراتب + المبيعات)</td><td>${currencyFormat(totalIncome)}</td></tr><tr><td>المصروفات</td><td>${currencyFormat(totalOut)}</td></tr><tr style="border-top:2px solid var(--border);font-weight:700;"><td>صافي الدخل</td><td style="color:${netIncome >= 0 ? 'var(--secondary)' : 'var(--danger)'};">${currencyFormat(netIncome)}</td></tr></table>`;
+        html = `<h4>📈 قائمة الدخل</h4><table><tr><th>البيان</th><th>المبلغ</th></tr><tr><td>الإيرادات (الراتب + المبيعات)</td><td>${currencyFormat(totalIncome)}</td></tr><tr><td>المصروفات (المشتريات + السحوبات)</td><td>${currencyFormat(totalOut)}</td></tr><tr style="border-top:2px solid var(--border);font-weight:700;"><td>صافي الدخل</td><td style="color:${netIncome >= 0 ? 'var(--secondary)' : 'var(--danger)'};">${currencyFormat(netIncome)}</td></tr></table>`;
     } else if (type === 'balance') {
         html = `<h4>⚖️ الميزانية العمومية</h4><table><tr><th>الأصول</th><th>المبلغ</th></tr><tr><td>قيمة المخزون</td><td>${currencyFormat(productValue)}</td></tr><tr><td>النقدية</td><td>${currencyFormat(appData.salary - totalExp)}</td></tr><tr style="border-top:2px solid var(--border);font-weight:700;"><td>إجمالي الأصول</td><td>${currencyFormat(totalAssets)}</td></tr><tr><th>الخصوم</th><th>المبلغ</th></tr><tr><td>الديون (عملاء + موردين)</td><td>${currencyFormat(totalLiabilities)}</td></tr><tr style="border-top:2px solid var(--border);font-weight:700;"><td>حقوق الملكية</td><td>${currencyFormat(equity)}</td></tr></table>`;
     } else if (type === 'cashflow') {
@@ -1171,7 +1280,7 @@ function runAIAnalysis() {
 }
 
 // ============================================================
-// 🔷 السحابة (Firebase)
+// 🔷 السحابة (Firebase) - ربط كل البيانات
 // ============================================================
 let firebaseDB = null;
 let firebaseReady = false;
@@ -1329,6 +1438,34 @@ function addSyncLog(msg) {
         if (log.innerHTML.split('<br>').length > 10) {
             log.innerHTML = log.innerHTML.split('<br>').slice(0, 10).join('<br>');
         }
+    }
+}
+
+// ============================================================
+// 🔷 نظام الدفع
+// ============================================================
+function showPayment() {
+    document.getElementById('paymentModal').classList.add('active');
+}
+function closePayment() {
+    document.getElementById('paymentModal').classList.remove('active');
+}
+function processPayment(method) {
+    if (method === 'credit') {
+        showToast('💳 بطاقة ائتمان - قريباً تحت الإنشاء 🚧', 'warning');
+        return;
+    }
+    const paymentInfo = method === 'vodafone' ? '📱 فودافون كاش رقم: 01011993799' : '🏦 إنستاباي: rashedrabia@instapay';
+    if (confirm(`✅ ${paymentInfo}\n\nهل تريد المتابعة للدفع؟`)) {
+        if (navigator.clipboard) {
+            const text = method === 'vodafone' ? '01011993799' : 'rashedrabia@instapay';
+            navigator.clipboard.writeText(text).then(() => showToast('✅ تم النسخ للحافظة', 'success'));
+        }
+        setTimeout(() => {
+            localStorage.setItem('userPlan', 'premium');
+            showToast('🎉 تم تفعيل الباقة المميزة', 'success');
+            closePayment();
+        }, 3000);
     }
 }
 
