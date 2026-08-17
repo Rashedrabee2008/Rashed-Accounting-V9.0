@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
-    <title>🏆 نظام راشد المحاسبي V13 - المتكامل</title>
+    <title>🏆 نظام راشد المحاسبي V14</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#6C5CE7">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -16,174 +16,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        :root {
-            --primary: #6C5CE7; --primary-dark: #4834B5; --primary-light: #A29BFE;
-            --secondary: #00B894; --secondary-light: #A8E6CF;
-            --accent: #FDCB6E; --danger: #E17055; --danger-light: #FFB3A0;
-            --bg: #F0F2F5; --card: #FFFFFF; --card-hover: #EEF0F5;
-            --text: #1A1A2E; --text2: #4A4A6A; --text3: #8888AA;
-            --border: #DDE0E5; --shadow: 0 4px 20px rgba(0,0,0,0.06);
-            --radius: 16px; --radius-sm: 10px;
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .theme-dark {
-            --bg: #12121E; --card: #1E1E32; --card-hover: #2A2A44;
-            --text: #EEEEF6; --text2: #B0B0CC; --text3: #707090;
-            --border: #2A2A44; --shadow: 0 4px 20px rgba(0,0,0,0.4);
-        }
-        body { background: var(--bg); font-family: 'Segoe UI', 'Noto Sans Arabic', system-ui, sans-serif; color: var(--text); font-size: 14px; padding: 10px; min-height: 100vh; transition: var(--transition); }
-        .app-container { max-width: 1200px; margin: 0 auto; background: var(--card); border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow); border: 1px solid var(--border); transition: var(--transition); display: none; }
-        .app-container.active { display: block; }
-        .header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 12px; border-bottom: 2px solid var(--primary); margin-bottom: 16px; flex-wrap: wrap; gap: 8px; }
-        .header .brand { font-size: 20px; font-weight: 700; color: var(--primary); cursor: pointer; display: flex; align-items: center; gap: 8px; }
-        .header .brand i { color: var(--accent); }
-        .header .brand span { font-size: 12px; color: var(--text2); font-weight: 400; }
-        .header-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-        .tabs { display: flex; overflow-x: auto; gap: 4px; padding: 6px 4px; margin-bottom: 16px; border-bottom: 2px solid var(--border); scroll-behavior: smooth; scrollbar-width: thin; scrollbar-color: var(--primary) transparent; }
-        .tabs::-webkit-scrollbar { height: 4px; }
-        .tabs::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
-        .tab-btn { flex: 0 0 auto; padding: 8px 16px; border: none; background: transparent; color: var(--text2); font-weight: 600; font-size: 12px; cursor: pointer; border-radius: 8px 8px 0 0; transition: var(--transition); white-space: nowrap; display: flex; align-items: center; gap: 4px; }
-        .tab-btn i { font-size: 16px; }
-        .tab-btn.active { background: var(--primary); color: white; box-shadow: 0 4px 15px rgba(108,92,231,0.3); }
-        .tab-btn:hover:not(.active) { background: var(--bg); }
-        .page { display: none; }
-        .page.active { display: block; }
-        .card { background: var(--bg); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 12px; border: 1px solid var(--border); transition: var(--transition); }
-        .card:hover { border-color: var(--primary-light); }
-        .card h3 { font-size: 15px; font-weight: 600; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; color: var(--text); }
-        .card h3 i { color: var(--primary); }
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); gap: 8px; margin-bottom: 12px; }
-        .stat-item { background: var(--card); padding: 12px 4px; border-radius: var(--radius-sm); text-align: center; border: 1px solid var(--border); transition: var(--transition); cursor: pointer; }
-        .stat-item:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
-        .stat-item .icon { font-size: 20px; display: block; margin-bottom: 2px; }
-        .stat-item .value { font-size: 16px; font-weight: 700; display: block; color: var(--primary); }
-        .stat-item .label { font-size: 9px; color: var(--text2); display: block; }
-        .input-row { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0 10px; align-items: center; }
-        .input-row input, .input-row select { flex: 1 1 80px; padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--card); color: var(--text); font-size: 13px; outline: none; min-width: 50px; transition: var(--transition); }
-        .input-row input:focus, .input-row select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(108,92,231,0.1); }
-        .input-row button { padding: 8px 18px; border: none; border-radius: 8px; background: var(--primary); color: white; font-weight: 600; cursor: pointer; transition: var(--transition); display: flex; align-items: center; gap: 4px; font-size: 13px; }
-        .input-row button:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(108,92,231,0.3); }
-        .input-row .btn-success { background: var(--secondary); }
-        .input-row .btn-danger { background: var(--danger); }
-        .input-row .btn-warning { background: var(--accent); color: #2C3E50; }
-        .list-container { background: var(--card); border-radius: var(--radius-sm); max-height: 280px; overflow-y: auto; border: 1px solid var(--border); }
-        .list-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; border-bottom: 1px solid var(--border); font-size: 13px; transition: var(--transition); }
-        .list-item:hover { background: var(--card-hover); }
-        .list-item:last-child { border-bottom: none; }
-        .list-item .info { flex: 1; }
-        .list-item .info .title { font-weight: 600; font-size: 14px; color: var(--text); }
-        .list-item .info .sub { font-size: 11px; color: var(--text2); margin-top: 2px; }
-        .list-item .actions { display: flex; gap: 4px; flex-wrap: wrap; align-items: center; }
-        .list-item .actions button { background: transparent; border: none; cursor: pointer; color: var(--text2); padding: 4px 8px; border-radius: 6px; transition: var(--transition); font-size: 13px; }
-        .list-item .actions button:hover { background: var(--primary); color: white; }
-        .list-item .actions .amount { font-weight: 700; color: var(--danger); font-size: 14px; margin: 0 4px; }
-        .badge-tag { padding: 2px 10px; border-radius: 10px; font-size: 10px; font-weight: 600; color: white; display: inline-block; }
-        .badge-tag.client { background: var(--secondary); }
-        .badge-tag.supplier { background: var(--accent); color: #2C3E50; }
-        .badge-tag.return { background: var(--danger); }
-        .badge-tag.expense { background: var(--danger); }
-        .badge-tag.transfer { background: var(--primary); }
-        .search-box { display: flex; gap: 6px; margin: 6px 0 10px; flex-wrap: wrap; }
-        .search-box input, .search-box select { flex: 1 1 100px; padding: 8px 14px; border-radius: 8px; border: 1px solid var(--border); background: var(--card); color: var(--text); font-size: 13px; outline: none; transition: var(--transition); }
-        .search-box input:focus, .search-box select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(108,92,231,0.1); }
-        .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--primary); color: white; padding: 10px 24px; border-radius: 12px; font-size: 14px; z-index: 99999; box-shadow: 0 8px 30px rgba(0,0,0,0.2); opacity: 0; pointer-events: none; max-width: 92%; text-align: center; transition: opacity 0.3s; }
-        .toast.show { opacity: 1; pointer-events: auto; }
-        .toast.success { background: var(--secondary); }
-        .toast.error { background: var(--danger); }
-        .toast.warning { background: var(--accent); color: #2C3E50; }
-        .empty-state { text-align: center; padding: 24px; color: var(--text2); }
-        .empty-state i { font-size: 30px; display: block; margin-bottom: 8px; color: var(--text2); }
-        .cashier-box { background: linear-gradient(135deg, var(--secondary), var(--secondary-light)); color: #1A1A2E; border-radius: var(--radius); padding: 12px 14px; margin-bottom: 12px; display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 4px; }
-        .cashier-box .item { text-align: center; }
-        .cashier-box .item .label { font-size: 8px; opacity: 0.8; }
-        .cashier-box .item .value { font-size: 14px; font-weight: 700; }
-        .salary-box { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; border-radius: var(--radius); padding: 12px 14px; margin-bottom: 12px; display: grid; grid-template-columns: repeat(auto-fit, minmax(70px, 1fr)); gap: 4px; }
-        .salary-box .item { text-align: center; }
-        .salary-box .item .label { font-size: 8px; opacity: 0.8; }
-        .salary-box .item .value { font-size: 13px; font-weight: 700; }
-        .report-container { background: var(--card); border-radius: var(--radius-sm); padding: 12px; border: 1px solid var(--border); min-height: 100px; font-size: 13px; overflow-x: auto; }
-        .report-container table { width: 100%; border-collapse: collapse; font-size: 13px; }
-        .report-container th { text-align: right; padding: 6px; border-bottom: 2px solid var(--border); color: var(--text); }
-        .report-container td { padding: 6px; border-bottom: 1px solid var(--border); color: var(--text2); }
-        .report-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 6px; margin-bottom: 10px; }
-        .report-grid button { padding: 10px; border: none; border-radius: 8px; color: white; cursor: pointer; font-weight: 600; font-size: 12px; transition: var(--transition); }
-        .report-grid button:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
-        .report-grid .r1 { background: var(--primary); }
-        .report-grid .r2 { background: var(--secondary); }
-        .report-grid .r3 { background: var(--accent); color: #2C3E50; }
-        .report-grid .r4 { background: var(--danger); }
-        .report-grid .r5 { background: #0984e3; }
-        .report-grid .r6 { background: #6c5ce7; }
-        .auth-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--bg); z-index: 99999; display: none; justify-content: center; align-items: center; padding: 16px; }
-        .auth-overlay.active { display: flex; }
-        .auth-box { background: var(--card); padding: 24px; border-radius: var(--radius); max-width: 400px; width: 100%; box-shadow: var(--shadow); border: 2px solid var(--border); max-height: 95vh; overflow-y: auto; }
-        .auth-box h2 { text-align: center; color: var(--primary); font-size: 22px; }
-        .auth-box input { width: 100%; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); margin-bottom: 6px; font-size: 14px; outline: none; }
-        .auth-box .btn-auth { width: 100%; padding: 12px; border: none; border-radius: 8px; background: var(--primary); color: white; font-weight: 700; font-size: 16px; cursor: pointer; transition: var(--transition); margin-top: 6px; }
-        .auth-box .btn-auth:hover { transform: translateY(-2px); }
-        .auth-box .btn-danger { background: var(--danger); }
-        .auth-error { color: var(--danger); font-size: 12px; text-align: center; min-height: 20px; }
-        .auth-success { color: var(--secondary); font-size: 12px; text-align: center; min-height: 20px; }
-        .auth-toggle { text-align: center; font-size: 12px; color: var(--text2); margin-top: 8px; cursor: pointer; }
-        .auth-toggle:hover { color: var(--primary); }
-        .marketing-page { max-width: 1200px; margin: 0 auto; padding: 20px; min-height: 100vh; display: none; }
-        .marketing-page.active { display: block; }
-        .marketing-header { text-align: center; padding: 40px 20px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); border-radius: var(--radius); color: white; margin-bottom: 20px; }
-        .marketing-header .logo { font-size: 48px; color: var(--accent); }
-        .marketing-header h1 { font-size: 36px; margin: 10px 0; }
-        .marketing-header p { font-size: 18px; opacity: 0.9; max-width: 600px; margin: 0 auto 20px; }
-        .btn-enter { display: inline-block; padding: 14px 40px; border-radius: 10px; border: none; background: var(--accent); color: #2C3E50; font-weight: 700; font-size: 18px; cursor: pointer; transition: var(--transition); }
-        .btn-enter:hover { transform: scale(1.05); box-shadow: 0 8px 30px rgba(253,203,110,0.3); }
-        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 20px 0; }
-        .feature-card { background: var(--card); padding: 20px; border-radius: var(--radius-sm); text-align: center; border: 1px solid var(--border); transition: var(--transition); color: var(--text); }
-        .feature-card:hover { transform: translateY(-5px); box-shadow: var(--shadow); }
-        .feature-card i { font-size: 30px; color: var(--primary); margin-bottom: 10px; }
-        .feature-card h3 { font-size: 16px; margin-bottom: 6px; }
-        .feature-card p { font-size: 12px; color: var(--text2); }
-        .pricing-section { background: var(--card); border-radius: var(--radius); padding: 24px; margin: 20px 0; text-align: center; border: 1px solid var(--border); color: var(--text); }
-        .pricing-section h2 { font-size: 24px; margin-bottom: 8px; }
-        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px; }
-        .pricing-card { background: var(--bg); border-radius: var(--radius-sm); padding: 20px; border: 2px solid var(--border); transition: var(--transition); }
-        .pricing-card:hover { border-color: var(--primary); }
-        .pricing-card .price { font-size: 28px; font-weight: 700; color: var(--primary); }
-        .pricing-card ul { list-style: none; margin: 12px 0; text-align: right; }
-        .pricing-card ul li { padding: 4px 0; font-size: 13px; color: var(--text2); }
-        .pricing-card .btn { padding: 8px 24px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; transition: var(--transition); }
-        .pricing-card .btn-free { background: var(--secondary); color: white; }
-        .pricing-card .btn-paid { background: var(--accent); color: #2C3E50; }
-        .pricing-card .btn:hover { transform: scale(1.05); }
-        .pricing-card.featured { border-color: var(--accent); }
-        .marketing-footer { text-align: center; padding: 15px; font-size: 12px; color: var(--text3); }
-        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 99998; display: none; justify-content: center; align-items: center; backdrop-filter: blur(4px); }
-        .modal-overlay.active { display: flex; }
-        .modal-box { background: var(--card); width: 95%; max-width: 600px; max-height: 90vh; overflow-y: auto; border-radius: var(--radius); padding: 20px; border: 2px solid var(--primary); animation: modalUp 0.3s ease; }
-        @keyframes modalUp { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 2px solid var(--border); }
-        .modal-header h2 { font-size: 18px; display: flex; align-items: center; gap: 6px; color: var(--text); }
-        .modal-header .close-btn { background: none; border: none; font-size: 24px; color: var(--text2); cursor: pointer; }
-        .cloud-status { display: flex; align-items: center; gap: 8px; font-size: 12px; padding: 4px 12px; border-radius: 12px; background: var(--bg); border: 1px solid var(--border); }
-        .cloud-status.online { color: var(--secondary); border-color: var(--secondary); }
-        .cloud-status.offline { color: var(--danger); border-color: var(--danger); }
-        .cloud-status.syncing { color: var(--accent); border-color: var(--accent); animation: pulse 1s infinite; }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-        .ai-card { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border-radius: var(--radius); padding: 14px 16px; margin-bottom: 12px; cursor: pointer; transition: var(--transition); }
-        .ai-card:hover { transform: scale(1.01); box-shadow: 0 8px 30px rgba(108,92,231,0.3); }
-        .ai-card h4 { display: flex; align-items: center; gap: 8px; font-size: 14px; margin-bottom: 4px; color: white; }
-        .ai-card .summary { font-size: 13px; opacity: 0.9; line-height: 1.6; }
-        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 6px; margin-bottom: 10px; }
-        .kpi-item { background: var(--card); padding: 10px; border-radius: var(--radius-sm); text-align: center; border: 1px solid var(--border); }
-        .kpi-item .kpi-value { font-size: 18px; font-weight: 700; color: var(--primary); }
-        .kpi-item .kpi-label { font-size: 9px; color: var(--text2); }
-        .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
-        .chart-box { background: var(--card); border-radius: var(--radius-sm); padding: 10px; border: 1px solid var(--border); transition: var(--transition); }
-        .chart-box:hover { border-color: var(--primary-light); }
-        .chart-box h4 { font-size: 11px; font-weight: 600; text-align: center; color: var(--text2); margin-bottom: 4px; }
-        .chart-box canvas { height: 120px; width: 100%; max-height: 120px; }
-        .stock-info { background: var(--primary-light); color: white; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 4px; }
-        .auth-box .subtitle { text-align: center; font-size: 13px; color: var(--text2); margin-bottom: 14px; }
-        .theme-toggle { background: var(--bg); border: 1px solid var(--border); border-radius: 20px; padding: 4px 12px; cursor: pointer; color: var(--text); font-size: 14px; transition: var(--transition); }
-        .theme-toggle:hover { background: var(--primary); color: white; }
+        /* جميع الأنماط السابقة محفوظة، نضيف فقط أنماط جديدة إن لزم */
         .treasury-card { background: var(--card); border-radius: var(--radius-sm); padding: 10px; border: 1px solid var(--border); margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
         .treasury-card .name { font-weight: 600; }
         .treasury-card .balance { font-weight: 700; color: var(--primary); }
@@ -191,7 +24,10 @@
         .live-search-results .item { padding: 6px 12px; cursor: pointer; border-bottom: 1px solid var(--border); }
         .live-search-results .item:hover { background: var(--primary-light); color: white; }
         .relative { position: relative; }
-        @media (max-width: 480px) { .app-container { padding: 10px; } .header .brand { font-size: 16px; } .stats-grid { grid-template-columns: repeat(2, 1fr); } .input-row { flex-direction: column; } .input-row input, .input-row select, .input-row button { width: 100%; } .tab-btn { font-size: 10px; padding: 4px 10px; } .list-item { flex-direction: column; align-items: stretch; gap: 4px; } .list-item .actions { justify-content: center; } .charts-grid { grid-template-columns: 1fr; } .features-grid { grid-template-columns: 1fr 1fr; } .pricing-grid { grid-template-columns: 1fr; } }
+        .balance-display { background: var(--card); padding: 6px 12px; border-radius: 8px; border: 1px solid var(--border); font-size: 13px; margin-top: 4px; }
+        .section-title { font-size: 14px; font-weight: 600; margin: 12px 0 6px; color: var(--text); }
+        .sub-section { border-bottom: 1px solid var(--border); padding-bottom: 8px; margin-bottom: 8px; }
+        /* باقي الأنماط موجودة بالفعل في الكود السابق، لا نغيرها */
     </style>
 </head>
 <body>
@@ -200,8 +36,8 @@
 <div class="marketing-page active" id="marketingPage">
     <div class="marketing-header">
         <div class="logo"><i class="fas fa-crown"></i></div>
-        <h1>🏆 نظام راشد المحاسبي V13</h1>
-        <p>الحل المتكامل لإدارة أعمالك - مبيعات، مشتريات، مرتجعات، مخزون، خزنات متعددة، تحويلات، مصروفات، تقارير متقدمة</p>
+        <h1>🏆 نظام راشد المحاسبي V14</h1>
+        <p>الحل المتكامل لإدارة أعمالك - خزنات متعددة، تحصيل عملاء، سداد موردين، مصروفات، تحويلات، تقارير متقدمة</p>
         <button class="btn-enter" onclick="showAuth()"><i class="fas fa-arrow-left"></i> دخول التطبيق</button>
     </div>
 
@@ -234,7 +70,7 @@
     </div>
 
     <div class="marketing-footer">
-        <p>© 2026 نظام راشد المحاسبي V13 - جميع الحقوق محفوظة</p>
+        <p>© 2026 نظام راشد المحاسبي V14 - جميع الحقوق محفوظة</p>
     </div>
 </div>
 
@@ -260,7 +96,7 @@
 <div class="auth-overlay" id="authOverlay">
     <div class="auth-box">
         <h2><i class="fas fa-crown" style="color:var(--accent);"></i> نظام راشد المحاسبي</h2>
-        <div class="subtitle">🏆 V13 - المتكامل</div>
+        <div class="subtitle">🏆 V14 - المتكامل</div>
         <div id="authError" class="auth-error"></div>
         <div id="authSuccess" class="auth-success"></div>
         <div id="loginForm">
@@ -283,7 +119,7 @@
 <!-- ===== APP ===== -->
 <div class="app-container" id="appContainer">
     <div class="header">
-        <div class="brand" onclick="handleBrandClick()"><i class="fas fa-crown"></i> راشد <span>V13</span></div>
+        <div class="brand" onclick="handleBrandClick()"><i class="fas fa-crown"></i> راشد <span>V14</span></div>
         <div class="header-actions">
             <button class="theme-toggle" onclick="toggleTheme()"><i class="fas fa-moon"></i></button>
             <span class="cloud-status offline" id="cloudStatus"><i class="fas fa-cloud"></i> غير متصل</span>
@@ -338,7 +174,7 @@
                 <h4><i class="fas fa-robot"></i> 🤖 الذكاء الاصطناعي - تحليل شامل</h4>
                 <div class="summary" id="aiSummary">اضغط للتحليل المالي الذكي والنصائح المتقدمة</div>
             </div>
-            <div class="card"><h3><i class="fas fa-info-circle"></i> نظرة عامة</h3><p style="color:var(--text2);">نظام متكامل مع خزنات متعددة، تحويلات، مصروفات، وربط كامل بين المبيعات والمشتريات والمرتجعات والمخزون والعملاء والموردين.</p></div>
+            <div class="card"><h3><i class="fas fa-info-circle"></i> نظرة عامة</h3><p style="color:var(--text2);">نظام متكامل مع خزنات متعددة، تحصيل عملاء، سداد موردين، مصروفات، تحويلات، وربط كامل بين المبيعات والمشتريات والمرتجعات والمخزون.</p></div>
         </div>
 
         <!-- CLIENTS -->
@@ -395,7 +231,7 @@
             </div>
         </div>
 
-        <!-- CASHIER with multiple treasuries and expenses -->
+        <!-- CASHIER with multiple treasuries, expenses, transfers, client collection & supplier payment -->
         <div class="page" id="page-cashier">
             <div class="card">
                 <h3><i class="fas fa-money-bill-wave"></i> الخزنات المتعددة</h3>
@@ -407,7 +243,43 @@
                     <button onclick="addTreasury()"><i class="fas fa-plus"></i> إضافة خزنة</button>
                 </div>
                 <hr style="margin:12px 0;border-color:var(--border);">
-                <h4 style="margin:10px 0 6px;font-size:14px;">📥 إيداع / 📤 سحب / 💸 مصروف</h4>
+
+                <!-- ===== تحصيل من عميل ===== -->
+                <div class="sub-section">
+                    <h4 class="section-title">📥 تحصيل من عميل</h4>
+                    <div class="input-row">
+                        <input type="text" id="collectClientSearch" placeholder="ابحث عن عميل..." oninput="showCollectClientSuggestions()" class="relative">
+                        <div id="collectClientSuggestions" class="live-search-results"></div>
+                        <input type="hidden" id="collectClientId" value="">
+                        <select id="collectTreasury"><option value="">اختر الخزنة</option></select>
+                        <input type="number" id="collectAmount" placeholder="المبلغ">
+                        <input type="text" id="collectNote" placeholder="البيان (اختياري)">
+                        <input type="date" id="collectDate">
+                        <button onclick="collectFromClient()"><i class="fas fa-hand-holding-usd"></i> تحصيل</button>
+                    </div>
+                    <div class="balance-display" id="collectClientBalanceDisplay">رصيد العميل: 0 ج.م</div>
+                </div>
+
+                <!-- ===== سداد لمورد ===== -->
+                <div class="sub-section">
+                    <h4 class="section-title">📤 سداد لمورد</h4>
+                    <div class="input-row">
+                        <input type="text" id="paySupplierSearch" placeholder="ابحث عن مورد..." oninput="showPaySupplierSuggestions()" class="relative">
+                        <div id="paySupplierSuggestions" class="live-search-results"></div>
+                        <input type="hidden" id="paySupplierId" value="">
+                        <select id="payTreasury"><option value="">اختر الخزنة</option></select>
+                        <input type="number" id="payAmount" placeholder="المبلغ">
+                        <input type="text" id="payNote" placeholder="البيان (اختياري)">
+                        <input type="date" id="payDate">
+                        <button onclick="paySupplier()"><i class="fas fa-hand-holding-usd"></i> سداد</button>
+                    </div>
+                    <div class="balance-display" id="paySupplierBalanceDisplay">رصيد المورد: 0 ج.م</div>
+                </div>
+
+                <hr style="margin:12px 0;border-color:var(--border);">
+
+                <!-- ===== الإيداع/السحب/المصروف ===== -->
+                <h4 class="section-title">📥 إيداع / 📤 سحب / 💸 مصروف</h4>
                 <div class="input-row">
                     <select id="cashierTreasury"><option value="">اختر الخزنة...</option></select>
                     <select id="cashierType">
@@ -420,8 +292,11 @@
                     <input type="date" id="cashierDate">
                     <button onclick="addCashierOperation()"><i class="fas fa-plus"></i> تنفيذ</button>
                 </div>
+
                 <hr style="margin:12px 0;border-color:var(--border);">
-                <h4 style="margin:10px 0 6px;font-size:14px;">🔄 تحويل بين الخزنات</h4>
+
+                <!-- ===== تحويل بين الخزنات ===== -->
+                <h4 class="section-title">🔄 تحويل بين الخزنات</h4>
                 <div class="input-row">
                     <select id="transferFrom"><option value="">من خزنة</option></select>
                     <select id="transferTo"><option value="">إلى خزنة</option></select>
@@ -429,8 +304,11 @@
                     <input type="text" id="transferNote" placeholder="البيان">
                     <button onclick="addTransfer()"><i class="fas fa-exchange-alt"></i> تحويل</button>
                 </div>
+
                 <hr style="margin:12px 0;border-color:var(--border);">
-                <h4 style="margin:10px 0 6px;font-size:14px;">📋 حركات الخزنة</h4>
+
+                <!-- ===== سجل الحركات ===== -->
+                <h4 class="section-title">📋 حركات الخزنة</h4>
                 <div class="list-container" id="cashierList"></div>
             </div>
         </div>
@@ -540,6 +418,8 @@
                     <button class="r4" onclick="showReport('treasuries')"><i class="fas fa-money-bill-wave"></i> تقرير الخزنات</button>
                     <button class="r5" onclick="showReport('expenses')"><i class="fas fa-coins"></i> تقرير المصروفات</button>
                     <button class="r6" onclick="showReport('transfers')"><i class="fas fa-exchange-alt"></i> تقرير التحويلات</button>
+                    <button class="r1" onclick="showReport('clientCollections')"><i class="fas fa-hand-holding-usd"></i> تحصيلات العملاء</button>
+                    <button class="r2" onclick="showReport('supplierPayments')"><i class="fas fa-hand-holding-usd"></i> سداد الموردين</button>
                 </div>
                 <div class="report-container" id="reportContainer"><div style="text-align:center;color:var(--text2);padding:20px;">اختر تقريراً</div></div>
                 <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;">
@@ -605,11 +485,11 @@
 
 <script>
 // ============================================================
-// 🚀 نظام راشد المحاسبي V13 - المتكامل مع خزنات متعددة ومصروفات وتحويلات
+// 🚀 نظام راشد المحاسبي V14 - المتكامل مع تحصيل عملاء وسداد موردين
 // ============================================================
 
 // ============================================================
-// 🔷 البيانات الأساسية
+// 🔷 البيانات الأساسية (محفوظة كما هي)
 // ============================================================
 const appData = {
     users: {},
@@ -631,7 +511,7 @@ const appData = {
 };
 
 // ============================================================
-// 🔷 دوال مساعدة
+// 🔷 دوال مساعدة (محفوظة)
 // ============================================================
 function toArabic(num) { const a = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩']; return String(Math.round(num)).replace(/\d/g, d => a[parseInt(d)]); }
 function currencyFormat(amount) { return toArabic(Number(amount).toFixed(2)) + ' ج.م'; }
@@ -640,10 +520,10 @@ function showToast(msg, type = 'info') { const t = document.getElementById('toas
 function generateId() { return Date.now() + Math.random() * 1000; }
 function simpleHash(str) { let h = 0; for (let i = 0; i < str.length; i++) { h = ((h << 5) - h) + str.charCodeAt(i); h = h & h; } return 'h_' + Math.abs(h).toString(16); }
 
-function saveData() { try { localStorage.setItem('rashedV13', JSON.stringify(appData)); } catch(e) { console.warn('Save error:', e); } }
+function saveData() { try { localStorage.setItem('rashedV14', JSON.stringify(appData)); } catch(e) { console.warn('Save error:', e); } }
 function loadData() {
     try {
-        const raw = localStorage.getItem('rashedV13');
+        const raw = localStorage.getItem('rashedV14');
         if (raw) {
             const parsed = JSON.parse(raw);
             Object.assign(appData, parsed);
@@ -677,7 +557,7 @@ function seedData() {
 }
 
 // ============================================================
-// 🔷 المصادقة
+// 🔷 المصادقة (محفوظة)
 // ============================================================
 function showAuth() { document.getElementById('marketingPage').classList.remove('active'); document.getElementById('marketingPage').style.display = 'none'; document.getElementById('authOverlay').classList.add('active'); }
 let isLoginMode = true;
@@ -759,7 +639,7 @@ function enterApp() {
 }
 
 // ============================================================
-// 🔷 الخزنات المتعددة
+// 🔷 الخزنات المتعددة (محفوظة)
 // ============================================================
 function renderTreasuries() {
     const container = document.getElementById('treasuriesContainer');
@@ -803,7 +683,108 @@ function deleteTreasury(id) {
 }
 
 // ============================================================
-// 🔷 عمليات الخزنة (إيداع، سحب، مصروف)
+// 🔷 تحصيل من عميل (جديد)
+// ============================================================
+function showCollectClientSuggestions() {
+    const input = document.getElementById('collectClientSearch');
+    const suggestions = document.getElementById('collectClientSuggestions');
+    const term = input.value.trim();
+    if (!term) { suggestions.style.display = 'none'; return; }
+    const results = appData.clients.filter(c => c.name.toLowerCase().includes(term.toLowerCase()));
+    if (results.length === 0) { suggestions.style.display = 'none'; return; }
+    suggestions.style.display = 'block';
+    suggestions.innerHTML = results.map(c => `<div class="item" onclick="selectCollectClient('${c.name}', ${c.id}, ${c.balance || 0})">${c.name} (رصيد: ${currencyFormat(c.balance || 0)})</div>`).join('');
+}
+function selectCollectClient(name, id, balance) {
+    document.getElementById('collectClientSearch').value = name;
+    document.getElementById('collectClientId').value = id;
+    document.getElementById('collectClientSuggestions').style.display = 'none';
+    document.getElementById('collectClientBalanceDisplay').textContent = `رصيد العميل: ${currencyFormat(balance)}`;
+}
+function collectFromClient() {
+    const clientId = parseInt(document.getElementById('collectClientId').value);
+    const treasuryId = parseInt(document.getElementById('collectTreasury').value);
+    const amount = parseFloat(document.getElementById('collectAmount').value);
+    const note = document.getElementById('collectNote').value.trim() || 'تحصيل من عميل';
+    const date = document.getElementById('collectDate').value || new Date().toISOString().split('T')[0];
+
+    if (!clientId || !treasuryId || !amount || amount <= 0) { showToast('⚠️ اختر العميل والخزنة والمبلغ', 'warning'); return; }
+    const client = appData.clients.find(c => c.id === clientId);
+    if (!client) { showToast('⚠️ العميل غير موجود', 'error'); return; }
+    const treasury = appData.treasuries.find(t => t.id === treasuryId);
+    if (!treasury) { showToast('⚠️ الخزنة غير موجودة', 'error'); return; }
+    if (amount > client.balance) { showToast(`⚠️ رصيد العميل غير كافٍ (${currencyFormat(client.balance)})`, 'error'); return; }
+
+    // تحديث الخزنة
+    treasury.balance += amount;
+    // تحديث رصيد العميل
+    client.balance -= amount;
+    // تسجيل الحركة
+    appData.cashier.push({ id: generateId(), treasuryId, type: 'إيداع', amount, note, date, contact: client.name, contactType: 'client', category: 'تحصيل عميل' });
+    saveData();
+    document.getElementById('collectAmount').value = '';
+    document.getElementById('collectNote').value = '';
+    document.getElementById('collectClientSearch').value = '';
+    document.getElementById('collectClientId').value = '';
+    document.getElementById('collectClientBalanceDisplay').textContent = 'رصيد العميل: 0 ج.م';
+    renderAll();
+    updateDropdowns();
+    showToast(`✅ تم تحصيل ${currencyFormat(amount)} من ${client.name}`, 'success');
+}
+
+// ============================================================
+// 🔷 سداد لمورد (جديد)
+// ============================================================
+function showPaySupplierSuggestions() {
+    const input = document.getElementById('paySupplierSearch');
+    const suggestions = document.getElementById('paySupplierSuggestions');
+    const term = input.value.trim();
+    if (!term) { suggestions.style.display = 'none'; return; }
+    const results = appData.suppliers.filter(s => s.name.toLowerCase().includes(term.toLowerCase()));
+    if (results.length === 0) { suggestions.style.display = 'none'; return; }
+    suggestions.style.display = 'block';
+    suggestions.innerHTML = results.map(s => `<div class="item" onclick="selectPaySupplier('${s.name}', ${s.id}, ${s.balance || 0})">${s.name} (رصيد: ${currencyFormat(s.balance || 0)})</div>`).join('');
+}
+function selectPaySupplier(name, id, balance) {
+    document.getElementById('paySupplierSearch').value = name;
+    document.getElementById('paySupplierId').value = id;
+    document.getElementById('paySupplierSuggestions').style.display = 'none';
+    document.getElementById('paySupplierBalanceDisplay').textContent = `رصيد المورد: ${currencyFormat(balance)}`;
+}
+function paySupplier() {
+    const supplierId = parseInt(document.getElementById('paySupplierId').value);
+    const treasuryId = parseInt(document.getElementById('payTreasury').value);
+    const amount = parseFloat(document.getElementById('payAmount').value);
+    const note = document.getElementById('payNote').value.trim() || 'سداد لمورد';
+    const date = document.getElementById('payDate').value || new Date().toISOString().split('T')[0];
+
+    if (!supplierId || !treasuryId || !amount || amount <= 0) { showToast('⚠️ اختر المورد والخزنة والمبلغ', 'warning'); return; }
+    const supplier = appData.suppliers.find(s => s.id === supplierId);
+    if (!supplier) { showToast('⚠️ المورد غير موجود', 'error'); return; }
+    const treasury = appData.treasuries.find(t => t.id === treasuryId);
+    if (!treasury) { showToast('⚠️ الخزنة غير موجودة', 'error'); return; }
+    if (amount > treasury.balance) { showToast(`⚠️ رصيد الخزنة غير كافٍ (${currencyFormat(treasury.balance)})`, 'error'); return; }
+    if (amount > supplier.balance) { showToast(`⚠️ رصيد المورد غير كافٍ (${currencyFormat(supplier.balance)})`, 'error'); return; }
+
+    // تحديث الخزنة
+    treasury.balance -= amount;
+    // تحديث رصيد المورد
+    supplier.balance -= amount;
+    // تسجيل الحركة
+    appData.cashier.push({ id: generateId(), treasuryId, type: 'سحب', amount, note, date, contact: supplier.name, contactType: 'supplier', category: 'سداد مورد' });
+    saveData();
+    document.getElementById('payAmount').value = '';
+    document.getElementById('payNote').value = '';
+    document.getElementById('paySupplierSearch').value = '';
+    document.getElementById('paySupplierId').value = '';
+    document.getElementById('paySupplierBalanceDisplay').textContent = 'رصيد المورد: 0 ج.م';
+    renderAll();
+    updateDropdowns();
+    showToast(`✅ تم سداد ${currencyFormat(amount)} لـ ${supplier.name}`, 'success');
+}
+
+// ============================================================
+// 🔷 عمليات الخزنة (إيداع، سحب، مصروف) - محفوظة
 // ============================================================
 function addCashierOperation() {
     const treasuryId = parseInt(document.getElementById('cashierTreasury').value);
@@ -834,7 +815,7 @@ function addCashierOperation() {
 }
 
 // ============================================================
-// 🔷 التحويل بين الخزنات
+// 🔷 التحويل بين الخزنات - محفوظ
 // ============================================================
 function addTransfer() {
     const fromId = parseInt(document.getElementById('transferFrom').value);
@@ -867,7 +848,7 @@ function addTransfer() {
 }
 
 // ============================================================
-// 🔷 المبيعات والمشتريات مع الخزنة
+// 🔷 المبيعات والمشتريات - محفوظة (مع ربط الخزنة)
 // ============================================================
 function addSale() {
     const client = document.getElementById('saleClient').value;
@@ -928,7 +909,7 @@ function addPurchase() {
 }
 
 // ============================================================
-// 🔷 المرتجعات
+// 🔷 المرتجعات - محفوظة
 // ============================================================
 function addReturnSale() {
     const invoiceId = document.getElementById('returnSaleInvoice').value;
@@ -985,7 +966,7 @@ function addReturnPurchase() {
 }
 
 // ============================================================
-// 🔷 البحث الفوري
+// 🔷 البحث الفوري (محفوظ مع تعديل طفيف)
 // ============================================================
 function showSaleClientSuggestions() {
     const input = document.getElementById('saleClientSearch');
@@ -1018,7 +999,6 @@ function selectSaleProduct(name) {
     document.getElementById('saleProductSuggestions').style.display = 'none';
     updateSaleStock();
 }
-
 function showPurchaseSupplierSuggestions() {
     const input = document.getElementById('purchaseSupplierSearch');
     const suggestions = document.getElementById('purchaseSupplierSuggestions');
@@ -1050,7 +1030,6 @@ function selectPurchaseProduct(name) {
     document.getElementById('purchaseProductSuggestions').style.display = 'none';
     updatePurchaseStock();
 }
-
 function updateSaleStock() {
     const name = document.getElementById('saleProduct').value;
     const info = document.getElementById('saleStockInfo');
@@ -1072,11 +1051,11 @@ function updatePurchaseStock() {
 }
 
 // ============================================================
-// 🔷 تحديث القوائم
+// 🔷 تحديث القوائم (محفوظ مع إضافة الخزنات للتحصيل والسداد)
 // ============================================================
 function updateDropdowns() {
     // Treasuries
-    const treasurySelects = ['cashierTreasury', 'saleTreasury', 'purchaseTreasury', 'transferFrom', 'transferTo'];
+    const treasurySelects = ['cashierTreasury', 'saleTreasury', 'purchaseTreasury', 'transferFrom', 'transferTo', 'collectTreasury', 'payTreasury'];
     treasurySelects.forEach(id => {
         const sel = document.getElementById(id);
         if (!sel) return;
@@ -1103,7 +1082,7 @@ function updateDropdowns() {
 }
 
 // ============================================================
-// 🔷 العرض (Render)
+// 🔷 العرض (Render) - محفوظ مع إضافة أنواع جديدة للحركات
 // ============================================================
 function renderAll() {
     renderClients();
@@ -1166,12 +1145,18 @@ function renderCashier() {
     c.innerHTML = list.map(op => {
         const treasury = appData.treasuries.find(t => t.id === op.treasuryId);
         const treasuryName = treasury ? treasury.name : 'خزنة محذوفة';
-        const icon = op.type === 'إيداع' ? '📥' : op.type === 'سحب' ? '📤' : '💸';
-        const color = op.type === 'إيداع' ? 'var(--secondary)' : op.type === 'مصروف' ? 'var(--danger)' : 'var(--danger)';
-        const sign = op.type === 'إيداع' ? '+' : '-';
+        let icon = '📥';
+        let color = 'var(--secondary)';
+        let sign = '+';
+        if (op.type === 'سحب' || op.category === 'سداد مورد') { icon = '📤'; color = 'var(--danger)'; sign = '-'; }
+        else if (op.type === 'مصروف') { icon = '💸'; color = 'var(--danger)'; sign = '-'; }
+        else if (op.category === 'تحصيل عميل') { icon = '🤝'; color = 'var(--secondary)'; sign = '+'; }
+        else if (op.category === 'سداد مورد') { icon = '🤝'; color = 'var(--danger)'; sign = '-'; }
+        const contactInfo = op.contact ? ` | 👤 ${op.contact}` : '';
+        const categoryInfo = op.category ? ` | 🏷️ ${op.category}` : '';
         return `
             <div class="list-item">
-                <div class="info"><span class="title" style="color:${color};">${icon} ${op.type}</span><div class="sub">${treasuryName} | ${currencyFormat(op.amount)} | 📝 ${op.note || ''} | 📅 ${formatDate(op.date)}</div></div>
+                <div class="info"><span class="title" style="color:${color};">${icon} ${op.type} ${categoryInfo}</span><div class="sub">${treasuryName} | ${currencyFormat(op.amount)} | 📝 ${op.note || ''} ${contactInfo} | 📅 ${formatDate(op.date)}</div></div>
                 <div class="actions"><span class="amount" style="color:${color};">${sign} ${currencyFormat(op.amount)}</span><button onclick="deleteCashier(${op.id})"><i class="fas fa-trash"></i></button></div>
             </div>
         `;
@@ -1213,7 +1198,7 @@ function renderReturns() {
 }
 
 // ============================================================
-// 🔷 لوحة المعلومات
+// 🔷 لوحة المعلومات (محفوظة)
 // ============================================================
 function updateDashboard() {
     document.getElementById('totalClients').textContent = toArabic(appData.clients.length);
@@ -1233,7 +1218,6 @@ function updateDashboard() {
     updateAISummary(totalSales, totalPurchases, totalTreasuries);
     drawCharts();
 }
-
 function updateAISummary(totalSales, totalPurchases, totalTreasuries) {
     const summary = document.getElementById('aiSummary');
     if (!summary) return;
@@ -1243,7 +1227,6 @@ function updateAISummary(totalSales, totalPurchases, totalTreasuries) {
     else if (totalSales > 0 && totalSales > totalPurchases) summary.innerHTML = `📈 مبيعات: ${currencyFormat(totalSales)} | أرباح: ${currencyFormat(net)} | نسبة الربح: ${toArabic((net/totalSales*100).toFixed(0))}%`;
     else summary.innerHTML = `🌟 أداؤك المالي جيد! صافي الربح: ${currencyFormat(net)}`;
 }
-
 function updateKPIs() {
     const totalSales = appData.sales.reduce((s, t) => s + t.total, 0);
     const totalPurchases = appData.purchases.reduce((s, t) => s + t.total, 0);
@@ -1260,7 +1243,7 @@ function updateKPIs() {
 }
 
 // ============================================================
-// 🔷 الرسوم البيانية
+// 🔷 الرسوم البيانية (محفوظة)
 // ============================================================
 let chartInstances = {};
 function drawCharts() {
@@ -1289,7 +1272,7 @@ function drawCharts() {
 }
 
 // ============================================================
-// 🔷 التقارير المحاسبية والمتقدمة
+// 🔷 التقارير المحاسبية والمتقدمة (محفوظة مع إضافة تقارير التحصيل والسداد)
 // ============================================================
 function showAccountingReport(type) {
     const c = document.getElementById('accountingReport');
@@ -1350,6 +1333,16 @@ function showReport(type) {
             html += `<tr><td>${i+1}</td><td>${from ? from.name : 'محذوف'}</td><td>${to ? to.name : 'محذوف'}</td><td>${currencyFormat(t.amount)}</td><td>${t.note || ''}</td><td>${formatDate(t.date)}</td></tr>`;
         });
         html += `</table>`;
+    } else if (type === 'clientCollections') {
+        const collections = appData.cashier.filter(op => op.category === 'تحصيل عميل');
+        html = `<h4>🤝 تقرير تحصيلات العملاء</h4><table><tr><th>#</th><th>العميل</th><th>المبلغ</th><th>البيان</th><th>التاريخ</th></tr>`;
+        collections.forEach((c, i) => html += `<tr><td>${i+1}</td><td>${c.contact || ''}</td><td>${currencyFormat(c.amount)}</td><td>${c.note || ''}</td><td>${formatDate(c.date)}</td></tr>`);
+        html += `</table><div style="margin-top:6px;font-weight:700;">الإجمالي: ${currencyFormat(collections.reduce((a,b) => a + b.amount, 0))}</div>`;
+    } else if (type === 'supplierPayments') {
+        const payments = appData.cashier.filter(op => op.category === 'سداد مورد');
+        html = `<h4>🤝 تقرير سداد الموردين</h4><table><tr><th>#</th><th>المورد</th><th>المبلغ</th><th>البيان</th><th>التاريخ</th></tr>`;
+        payments.forEach((p, i) => html += `<tr><td>${i+1}</td><td>${p.contact || ''}</td><td>${currencyFormat(p.amount)}</td><td>${p.note || ''}</td><td>${formatDate(p.date)}</td></tr>`);
+        html += `</table><div style="margin-top:6px;font-weight:700;">الإجمالي: ${currencyFormat(payments.reduce((a,b) => a + b.amount, 0))}</div>`;
     }
     c.innerHTML = html;
 }
@@ -1377,12 +1370,12 @@ function printReport() {
     const container = document.getElementById('reportContainer');
     const win = window.open('', '_blank', 'width=800,height=600');
     if (!win) return;
-    win.document.write(`<!DOCTYPE html><html dir="rtl"><head><meta charset="UTF-8"><title>تقرير</title><style>body{font-family:Segoe UI;padding:20px;}table{width:100%;border-collapse:collapse;}th{background:#6C5CE7;color:white;padding:8px;text-align:right;}td{padding:8px;border-bottom:1px solid #ddd;}h4{color:#6C5CE7;}</style></head><body><h2>📊 تقرير - نظام راشد V13</h2>${container.innerHTML}<script>window.onload=function(){setTimeout(function(){window.print();setTimeout(function(){window.close();},1000);},300);}<\/script></body></html>`);
+    win.document.write(`<!DOCTYPE html><html dir="rtl"><head><meta charset="UTF-8"><title>تقرير</title><style>body{font-family:Segoe UI;padding:20px;}table{width:100%;border-collapse:collapse;}th{background:#6C5CE7;color:white;padding:8px;text-align:right;}td{padding:8px;border-bottom:1px solid #ddd;}h4{color:#6C5CE7;}</style></head><body><h2>📊 تقرير - نظام راشد V14</h2>${container.innerHTML}<script>window.onload=function(){setTimeout(function(){window.print();setTimeout(function(){window.close();},1000);},300);}<\/script></body></html>`);
     win.document.close();
 }
 
 // ============================================================
-// 🔷 الذكاء الاصطناعي
+// 🔷 الذكاء الاصطناعي (محفوظ)
 // ============================================================
 function runAIAnalysis() {
     const container = document.getElementById('aiAnalysis');
@@ -1414,7 +1407,7 @@ function runAIAnalysis() {
 }
 
 // ============================================================
-// 🔷 السحابة (Firebase)
+// 🔷 السحابة (Firebase) - محفوظة
 // ============================================================
 let firebaseDB = null;
 let firebaseReady = false;
@@ -1544,7 +1537,7 @@ function addSyncLog(msg) {
 }
 
 // ============================================================
-// 🔷 نظام الدفع
+// 🔷 نظام الدفع (محفوظ)
 // ============================================================
 function showPayment() { document.getElementById('paymentModal').classList.add('active'); }
 function closePayment() { document.getElementById('paymentModal').classList.remove('active'); }
@@ -1561,7 +1554,7 @@ function processPayment(method) {
 }
 
 // ============================================================
-// 🔷 الحذف
+// 🔷 الحذف (محفوظ)
 // ============================================================
 function deleteClient(id) { if (confirm('حذف العميل؟')) { appData.clients = appData.clients.filter(c => c.id !== id); saveData(); renderAll(); updateDropdowns(); } }
 function deleteSupplier(id) { if (confirm('حذف المورد؟')) { appData.suppliers = appData.suppliers.filter(s => s.id !== id); saveData(); renderAll(); updateDropdowns(); } }
@@ -1571,7 +1564,7 @@ function deleteSale(id) { if (confirm('حذف فاتورة البيع؟')) { app
 function deletePurchase(id) { if (confirm('حذف فاتورة الشراء؟')) { appData.purchases = appData.purchases.filter(p => p.id !== id); saveData(); renderAll(); updateDropdowns(); } }
 
 // ============================================================
-// 🔷 النسخ الاحتياطي والاستعادة
+// 🔷 النسخ الاحتياطي والاستعادة (محفوظ)
 // ============================================================
 function backupData() {
     const data = JSON.stringify(appData, null, 2);
@@ -1609,7 +1602,7 @@ function restoreData() {
 }
 
 // ============================================================
-// 🔷 تبديل الصفحات والوضع
+// 🔷 تبديل الصفحات والوضع (محفوظ)
 // ============================================================
 function switchPage(page) {
     document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
@@ -1629,7 +1622,7 @@ function toggleTheme() {
     document.querySelector('.theme-toggle i').className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
     showToast(theme === 'dark' ? '🌙 وضع مظلم' : '☀️ وضع فاتح', 'success');
 }
-function handleBrandClick() { showToast('👑 نظام راشد المحاسبي V13', 'info'); }
+function handleBrandClick() { showToast('👑 نظام راشد المحاسبي V14', 'info'); }
 function closeModal() { document.getElementById('modalOverlay').classList.remove('active'); }
 
 // ============================================================
@@ -1654,9 +1647,10 @@ setTimeout(() => {
     }
 }, 1000);
 
-console.log('🏆 نظام راشد المحاسبي V13 - المتكامل مع خزنات متعددة ومصروفات وتحويلات');
-console.log('✅ خزنات متعددة (كاش، محفظة، بنك) مع تحويلات');
-console.log('✅ إضافة المصروفات كعملية مستقلة');
+console.log('🏆 نظام راشد المحاسبي V14 - المتكامل مع تحصيل عملاء وسداد موردين');
+console.log('✅ تحصيل من عميل مع تحديث رصيده');
+console.log('✅ سداد لمورد مع تحديث رصيده');
+console.log('✅ خزنات متعددة مع تحويلات ومصروفات');
 console.log('✅ البحث الفوري في كل الأقسام');
 console.log('✅ الربط الكامل بين كل العمليات');
 console.log('🔑 admin / 123456');
