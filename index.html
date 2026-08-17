@@ -1635,6 +1635,11 @@
 // ============================================================
 
 // ============================================================
+// 🔷 المعرف السحابي الافتراضي (مضاف تلقائياً)
+// ============================================================
+const DEFAULT_CLOUD_USER_ID = 'iNn5J4FnTmfXjV5RqDLw';
+
+// ============================================================
 // 🔷 إعدادات Firebase الجديدة
 // ============================================================
 const FIREBASE_CONFIG = {
@@ -1681,7 +1686,7 @@ const appData = {
     salary: 15000,
     currencySymbol: 'ج.م',
     _admin: { totalLogins: 0 },
-    cloudUserId: '',
+    cloudUserId: DEFAULT_CLOUD_USER_ID, // المعرف الافتراضي
     theme: 'light',
     cloudConnected: false,
     payments: [],
@@ -1696,7 +1701,7 @@ let firebaseDB = null;
 let firebaseReady = false;
 let isSyncing = false;
 let syncInterval = null;
-let _cloudUserId = '';
+let _cloudUserId = DEFAULT_CLOUD_USER_ID; // المعرف الافتراضي
 
 // ============================================================
 // 🔷 البيانات الافتراضية
@@ -1810,10 +1815,12 @@ function loadData() {
     } catch(e) {}
     seedData();
     applyTheme();
-    if (appData.cloudUserId) {
-        _cloudUserId = appData.cloudUserId;
-        document.getElementById('cloudUserIdDisplay').textContent = _cloudUserId;
-    }
+    
+    // استخدام المعرف الافتراضي
+    _cloudUserId = DEFAULT_CLOUD_USER_ID;
+    appData.cloudUserId = DEFAULT_CLOUD_USER_ID;
+    document.getElementById('cloudUserIdDisplay').textContent = DEFAULT_CLOUD_USER_ID;
+    
     const plan = localStorage.getItem('userPlan') || 'مجانية';
     appData.plan = plan;
     document.getElementById('profilePlan').textContent = plan === 'premium' ? '⭐ بريميوم' : '📋 مجانية';
@@ -2000,6 +2007,9 @@ function enterApp() {
     const plan = localStorage.getItem('userPlan') || 'مجانية';
     appData.plan = plan;
     document.getElementById('profilePlan').textContent = plan === 'premium' ? '⭐ بريميوم' : '📋 مجانية';
+    
+    // عرض المعرف السحابي
+    document.getElementById('cloudUserIdDisplay').textContent = DEFAULT_CLOUD_USER_ID;
 }
 
 // ============================================================
@@ -4590,7 +4600,7 @@ function drawSalesChart() {
 }
 
 // ============================================================
-// 🔷 FIREBASE - السحابة (باستخدام الإعدادات الجديدة)
+// 🔷 FIREBASE - السحابة (باستخدام الإعدادات الجديدة والمعرف الافتراضي)
 // ============================================================
 function initFirebase() {
     return new Promise((resolve, reject) => {
@@ -4616,14 +4626,18 @@ function initFirebase() {
             document.getElementById('firebaseStatus').textContent = '✅ متصل';
             document.getElementById('firebaseStatus').style.color = 'var(--secondary)';
             
-            if (appData.cloudUserId && !_cloudUserId) {
-                _cloudUserId = appData.cloudUserId;
-                document.getElementById('cloudUserIdDisplay').textContent = _cloudUserId;
-            }
+            // استخدام المعرف الافتراضي
+            _cloudUserId = DEFAULT_CLOUD_USER_ID;
+            appData.cloudUserId = DEFAULT_CLOUD_USER_ID;
+            document.getElementById('cloudUserIdDisplay').textContent = DEFAULT_CLOUD_USER_ID;
             
             updateCloudStatus(true);
             startAutoSync();
-            console.log('✅ Firebase connected successfully');
+            
+            // تحميل البيانات من السحابة تلقائياً
+            setTimeout(() => loadFromCloud(), 500);
+            
+            console.log('✅ Firebase connected successfully with ID: ' + DEFAULT_CLOUD_USER_ID);
             showToast('☁️ السحابة جاهزة', 'success');
             resolve(true);
         } catch (e) {
@@ -4761,18 +4775,16 @@ function connectCloud() {
         return;
     }
     
-    const userId = prompt('👤 معرف المستخدم السحابي (اختر اسماً مميزاً):', _cloudUserId || 'user_' + Date.now().toString().slice(-6));
-    if (userId && userId.trim()) {
-        _cloudUserId = userId.trim();
-        appData.cloudUserId = _cloudUserId;
-        document.getElementById('cloudUserIdDisplay').textContent = _cloudUserId;
-        saveData();
-        
-        loadFromCloud();
-        showToast('✅ تم ربط السحابة بنجاح', 'success');
-        updateCloudUI();
-        addSyncLog('✅ تم ربط السحابة - المستخدم: ' + _cloudUserId);
-    }
+    // استخدام المعرف الافتراضي تلقائياً
+    _cloudUserId = DEFAULT_CLOUD_USER_ID;
+    appData.cloudUserId = DEFAULT_CLOUD_USER_ID;
+    document.getElementById('cloudUserIdDisplay').textContent = DEFAULT_CLOUD_USER_ID;
+    saveData();
+    
+    loadFromCloud();
+    showToast('✅ تم ربط السحابة بنجاح', 'success');
+    updateCloudUI();
+    addSyncLog('✅ تم ربط السحابة - المستخدم: ' + DEFAULT_CLOUD_USER_ID);
 }
 
 function disconnectCloud() {
@@ -4896,11 +4908,7 @@ document.querySelectorAll('input[type="date"]').forEach(el => {
 async function initApp() {
     try {
         await initFirebase();
-        if (appData.cloudUserId) {
-            _cloudUserId = appData.cloudUserId;
-            document.getElementById('cloudUserIdDisplay').textContent = _cloudUserId;
-            setTimeout(() => loadFromCloud(), 500);
-        }
+        // المعرف مضاف تلقائياً في initFirebase
     } catch (e) {
         console.warn('⚠️ Firebase not available, running offline');
         document.getElementById('firebaseStatus').textContent = '⚠️ وضع غير متصل';
@@ -4928,6 +4936,7 @@ console.log('🏦 إنستاباي: rashedrabia@instapay');
 console.log('💳 بطاقة ائتمان: قريباً - تحت الإنشاء 🚧');
 console.log('👑 اضغط على التاج 5 مرات لفتح لوحة التحكم');
 console.log('☁️ السحابة: Firebase شغالة ✅');
+console.log('🔑 المعرف السحابي الافتراضي: ' + DEFAULT_CLOUD_USER_ID);
 console.log('💰 الخزنة مفعلة ✅');
 console.log('👤 العملاء والموردين مفصولين ✅');
 console.log('💾 الحفظ التلقائي مفعل ✅');
