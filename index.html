@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
-    <title>🏆 نظام راشد المحاسبي V11 - المتكامل</title>
+    <title>🏆 نظام راشد المحاسبي V12 - المتكامل</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#6C5CE7">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -60,7 +60,7 @@
         .stat-item .icon { font-size: 20px; display: block; margin-bottom: 2px; }
         .stat-item .value { font-size: 16px; font-weight: 700; display: block; color: var(--primary); }
         .stat-item .label { font-size: 9px; color: var(--text2); display: block; }
-        .input-row { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0 10px; }
+        .input-row { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0 10px; align-items: center; }
         .input-row input, .input-row select { flex: 1 1 80px; padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--card); color: var(--text); font-size: 13px; outline: none; min-width: 50px; transition: var(--transition); }
         .input-row input:focus, .input-row select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(108,92,231,0.1); }
         .input-row button { padding: 8px 18px; border: none; border-radius: 8px; background: var(--primary); color: white; font-weight: 600; cursor: pointer; transition: var(--transition); display: flex; align-items: center; gap: 4px; font-size: 13px; }
@@ -183,6 +183,11 @@
         .auth-box .subtitle { text-align: center; font-size: 13px; color: var(--text2); margin-bottom: 14px; }
         .theme-toggle { background: var(--bg); border: 1px solid var(--border); border-radius: 20px; padding: 4px 12px; cursor: pointer; color: var(--text); font-size: 14px; transition: var(--transition); }
         .theme-toggle:hover { background: var(--primary); color: white; }
+        .live-search-results { background: var(--card); border: 1px solid var(--border); border-radius: 8px; max-height: 150px; overflow-y: auto; position: absolute; z-index: 100; width: 100%; display: none; }
+        .live-search-results .item { padding: 6px 12px; cursor: pointer; border-bottom: 1px solid var(--border); }
+        .live-search-results .item:hover { background: var(--primary-light); color: white; }
+        .relative { position: relative; }
+        .balance-display { background: var(--card); padding: 6px 12px; border-radius: 8px; border: 1px solid var(--border); font-size: 13px; }
         @media (max-width: 480px) { .app-container { padding: 10px; } .header .brand { font-size: 16px; } .stats-grid { grid-template-columns: repeat(2, 1fr); } .input-row { flex-direction: column; } .input-row input, .input-row select, .input-row button { width: 100%; } .tab-btn { font-size: 10px; padding: 4px 10px; } .list-item { flex-direction: column; align-items: stretch; gap: 4px; } .list-item .actions { justify-content: center; } .charts-grid { grid-template-columns: 1fr; } .features-grid { grid-template-columns: 1fr 1fr; } .pricing-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
@@ -192,7 +197,7 @@
 <div class="marketing-page active" id="marketingPage">
     <div class="marketing-header">
         <div class="logo"><i class="fas fa-crown"></i></div>
-        <h1>🏆 نظام راشد المحاسبي V11</h1>
+        <h1>🏆 نظام راشد المحاسبي V12</h1>
         <p>الحل المتكامل لإدارة أعمالك - مبيعات، مشتريات، مرتجعات، مخزون، خزنة، عملاء، موردين، تقارير متقدمة وذكاء اصطناعي</p>
         <button class="btn-enter" onclick="showAuth()"><i class="fas fa-arrow-left"></i> دخول التطبيق</button>
     </div>
@@ -226,7 +231,7 @@
     </div>
 
     <div class="marketing-footer">
-        <p>© 2026 نظام راشد المحاسبي V11 - جميع الحقوق محفوظة</p>
+        <p>© 2026 نظام راشد المحاسبي V12 - جميع الحقوق محفوظة</p>
     </div>
 </div>
 
@@ -252,7 +257,7 @@
 <div class="auth-overlay" id="authOverlay">
     <div class="auth-box">
         <h2><i class="fas fa-crown" style="color:var(--accent);"></i> نظام راشد المحاسبي</h2>
-        <div class="subtitle">🏆 V11 - المتكامل</div>
+        <div class="subtitle">🏆 V12 - المتكامل</div>
         <div id="authError" class="auth-error"></div>
         <div id="authSuccess" class="auth-success"></div>
         <div id="loginForm">
@@ -275,7 +280,7 @@
 <!-- ===== APP ===== -->
 <div class="app-container" id="appContainer">
     <div class="header">
-        <div class="brand" onclick="handleBrandClick()"><i class="fas fa-crown"></i> راشد <span>V11</span></div>
+        <div class="brand" onclick="handleBrandClick()"><i class="fas fa-crown"></i> راشد <span>V12</span></div>
         <div class="header-actions">
             <button class="theme-toggle" onclick="toggleTheme()"><i class="fas fa-moon"></i></button>
             <span class="cloud-status offline" id="cloudStatus"><i class="fas fa-cloud"></i> غير متصل</span>
@@ -333,7 +338,7 @@
             <div class="card"><h3><i class="fas fa-info-circle"></i> نظرة عامة</h3><p style="color:var(--text2);">هذا النظام يربط المبيعات والمشتريات والمرتجعات بالمخزون والعملاء والموردين والخزنة. كل عملية تؤثر تلقائياً على الأرصدة والكميات.</p></div>
         </div>
 
-        <!-- CLIENTS -->
+        <!-- CLIENTS with live search -->
         <div class="page" id="page-clients">
             <div class="card">
                 <h3><i class="fas fa-users"></i> العملاء</h3>
@@ -344,11 +349,14 @@
                     <input type="number" id="clientBalance" placeholder="الرصيد الافتتاحي" value="0">
                     <button onclick="addClient()"><i class="fas fa-plus"></i> إضافة</button>
                 </div>
+                <div class="search-box">
+                    <input type="text" id="clientSearch" placeholder="بحث فوري عن عميل..." oninput="renderClients()">
+                </div>
                 <div class="list-container" id="clientList"></div>
             </div>
         </div>
 
-        <!-- SUPPLIERS -->
+        <!-- SUPPLIERS with live search -->
         <div class="page" id="page-suppliers">
             <div class="card">
                 <h3><i class="fas fa-truck"></i> الموردين</h3>
@@ -359,11 +367,14 @@
                     <input type="number" id="supplierBalance" placeholder="الرصيد الافتتاحي" value="0">
                     <button onclick="addSupplier()"><i class="fas fa-plus"></i> إضافة</button>
                 </div>
+                <div class="search-box">
+                    <input type="text" id="supplierSearch" placeholder="بحث فوري عن مورد..." oninput="renderSuppliers()">
+                </div>
                 <div class="list-container" id="supplierList"></div>
             </div>
         </div>
 
-        <!-- PRODUCTS -->
+        <!-- PRODUCTS with live search -->
         <div class="page" id="page-products">
             <div class="card">
                 <h3><i class="fas fa-boxes"></i> المخزون</h3>
@@ -374,11 +385,14 @@
                     <input type="number" id="productSellPrice" placeholder="سعر البيع">
                     <button onclick="addProduct()"><i class="fas fa-plus"></i> إضافة</button>
                 </div>
+                <div class="search-box">
+                    <input type="text" id="productSearch" placeholder="بحث فوري عن منتج..." oninput="renderProducts()">
+                </div>
                 <div class="list-container" id="productList"></div>
             </div>
         </div>
 
-        <!-- CASHIER -->
+        <!-- CASHIER with balance display -->
         <div class="page" id="page-cashier">
             <div class="card">
                 <h3><i class="fas fa-money-bill-wave"></i> الخزنة</h3>
@@ -388,23 +402,35 @@
                     <div class="item"><span class="label">📤 سحوبات</span><span class="value" id="cashierWithdrawals">٠</span></div>
                 </div>
                 <div class="input-row">
-                    <select id="cashierType"><option value="إيداع">📥 إيداع</option><option value="سحب">📤 سحب</option></select>
+                    <select id="cashierType" onchange="toggleCashierContact()"><option value="إيداع">📥 إيداع</option><option value="سحب">📤 سحب</option></select>
+                    <select id="cashierContactType" onchange="updateCashierBalanceDisplay()">
+                        <option value="client">عميل</option>
+                        <option value="supplier">مورد</option>
+                    </select>
+                    <input type="text" id="cashierContactSearch" placeholder="ابحث عن عميل/مورد..." oninput="showCashierSuggestions()" class="relative">
+                    <div id="cashierSuggestions" class="live-search-results"></div>
+                    <input type="hidden" id="cashierContactId" value="">
                     <input type="number" id="cashierAmount" placeholder="المبلغ">
                     <input type="text" id="cashierNote" placeholder="البيان">
                     <input type="date" id="cashierDate">
                     <button onclick="addCashierTransaction()"><i class="fas fa-plus"></i> تنفيذ</button>
                 </div>
+                <div class="balance-display" id="cashierContactBalance">رصيد العميل/المورد: 0 ج.م</div>
                 <div class="list-container" id="cashierList"></div>
             </div>
         </div>
 
-        <!-- SALES -->
+        <!-- SALES with live search and auto price -->
         <div class="page" id="page-sales">
             <div class="card">
                 <h3><i class="fas fa-file-invoice"></i> فواتير البيع</h3>
                 <div class="input-row">
-                    <select id="saleClient"><option value="">اختر العميل...</option></select>
-                    <select id="saleProduct" onchange="updateSaleStock()"><option value="">اختر المنتج...</option></select>
+                    <input type="text" id="saleClientSearch" placeholder="ابحث عن عميل..." oninput="showSaleClientSuggestions()">
+                    <div id="saleClientSuggestions" class="live-search-results"></div>
+                    <input type="hidden" id="saleClient" value="">
+                    <input type="text" id="saleProductSearch" placeholder="ابحث عن منتج..." oninput="showSaleProductSuggestions()">
+                    <div id="saleProductSuggestions" class="live-search-results"></div>
+                    <input type="hidden" id="saleProduct" value="">
                     <span class="stock-info" id="saleStockInfo">📦 المتوفر: 0</span>
                     <input type="number" id="saleQty" placeholder="الكمية" value="1">
                     <input type="number" id="salePrice" placeholder="سعر البيع">
@@ -413,17 +439,24 @@
                     <input type="date" id="saleDate">
                     <button onclick="addSale()"><i class="fas fa-plus"></i> إضافة</button>
                 </div>
+                <div class="search-box">
+                    <input type="text" id="saleSearch" placeholder="بحث في الفواتير..." oninput="renderSales()">
+                </div>
                 <div class="list-container" id="saleList"></div>
             </div>
         </div>
 
-        <!-- PURCHASES -->
+        <!-- PURCHASES with live search and auto price -->
         <div class="page" id="page-purchases">
             <div class="card">
                 <h3><i class="fas fa-shopping-cart"></i> فواتير المشتريات</h3>
                 <div class="input-row">
-                    <select id="purchaseSupplier"><option value="">اختر المورد...</option></select>
-                    <select id="purchaseProduct" onchange="updatePurchaseStock()"><option value="">اختر المنتج...</option></select>
+                    <input type="text" id="purchaseSupplierSearch" placeholder="ابحث عن مورد..." oninput="showPurchaseSupplierSuggestions()">
+                    <div id="purchaseSupplierSuggestions" class="live-search-results"></div>
+                    <input type="hidden" id="purchaseSupplier" value="">
+                    <input type="text" id="purchaseProductSearch" placeholder="ابحث عن منتج..." oninput="showPurchaseProductSuggestions()">
+                    <div id="purchaseProductSuggestions" class="live-search-results"></div>
+                    <input type="hidden" id="purchaseProduct" value="">
                     <span class="stock-info" id="purchaseStockInfo">📦 المتوفر: 0</span>
                     <input type="number" id="purchaseQty" placeholder="الكمية" value="1">
                     <input type="number" id="purchasePrice" placeholder="سعر الشراء">
@@ -431,6 +464,9 @@
                     <select id="purchasePayment"><option value="نقدي">نقدي</option><option value="آجل">آجل</option><option value="تحويل">تحويل</option></select>
                     <input type="date" id="purchaseDate">
                     <button onclick="addPurchase()"><i class="fas fa-plus"></i> إضافة</button>
+                </div>
+                <div class="search-box">
+                    <input type="text" id="purchaseSearch" placeholder="بحث في الفواتير..." oninput="renderPurchases()">
                 </div>
                 <div class="list-container" id="purchaseList"></div>
             </div>
@@ -570,10 +606,7 @@
 
 <script>
 // ============================================================
-// 🚀 نظام راشد المحاسبي V11 - المتكامل
-// كل الأقسام متربطة ببعضها: المبيعات، المشتريات، المرتجعات،
-// المخزون، الخزنة، العملاء، الموردين، التقارير، المحاسبة،
-// الذكاء الاصطناعي، السحابة
+// 🚀 نظام راشد المحاسبي V12 - المتكامل مع بحث فوري وربط تلقائي
 // ============================================================
 
 // ============================================================
@@ -606,10 +639,10 @@ function showToast(msg, type = 'info') { const t = document.getElementById('toas
 function generateId() { return Date.now() + Math.random() * 1000; }
 function simpleHash(str) { let h = 0; for (let i = 0; i < str.length; i++) { h = ((h << 5) - h) + str.charCodeAt(i); h = h & h; } return 'h_' + Math.abs(h).toString(16); }
 
-function saveData() { try { localStorage.setItem('rashedV11', JSON.stringify(appData)); } catch(e) { console.warn('Save error:', e); } }
+function saveData() { try { localStorage.setItem('rashedV12', JSON.stringify(appData)); } catch(e) { console.warn('Save error:', e); } }
 function loadData() {
     try {
-        const raw = localStorage.getItem('rashedV11');
+        const raw = localStorage.getItem('rashedV12');
         if (raw) {
             const parsed = JSON.parse(raw);
             Object.assign(appData, parsed);
@@ -629,7 +662,7 @@ function seedData() {
     if (appData.clients.length === 0) appData.clients = [{ id: 1, name: 'شركة النور', phone: '0123456789', address: 'القاهرة', balance: 0 }];
     if (appData.suppliers.length === 0) appData.suppliers = [{ id: 1, name: 'مؤسسة الأمل', phone: '0987654321', address: 'الإسكندرية', balance: 0 }];
     if (appData.products.length === 0) appData.products = [{ id: 1, name: 'منتج تجريبي', quantity: 100, buyPrice: 50, sellPrice: 75 }];
-    if (appData.cashier.length === 0) appData.cashier = [{ id: 1, type: 'إيداع', amount: 500, note: 'رصيد افتتاحي', date: new Date().toISOString().split('T')[0] }];
+    if (appData.cashier.length === 0) appData.cashier = [{ id: 1, type: 'إيداع', amount: 500, note: 'رصيد افتتاحي', date: new Date().toISOString().split('T')[0], contact: '', contactType: '' }];
     saveData();
 }
 
@@ -738,38 +771,23 @@ function enterApp() {
 }
 
 // ============================================================
+// 🔷 البحث الفوري (Live Search)
+// ============================================================
+function filterItems(items, searchTerm) {
+    if (!searchTerm) return items;
+    return items.filter(item => item.name.toLowerCase().includes(searchTerm.toLowerCase()));
+}
+
+// ============================================================
 // 🔷 التحديثات والربط
 // ============================================================
 function updateDropdowns() {
-    // العملاء
-    const clientSelect = document.getElementById('saleClient');
-    if (clientSelect) {
-        clientSelect.innerHTML = '<option value="">اختر العميل...</option>';
-        appData.clients.forEach(c => clientSelect.innerHTML += `<option value="${c.name}">${c.name}</option>`);
-    }
-    // الموردين
-    const supplierSelect = document.getElementById('purchaseSupplier');
-    if (supplierSelect) {
-        supplierSelect.innerHTML = '<option value="">اختر المورد...</option>';
-        appData.suppliers.forEach(s => supplierSelect.innerHTML += `<option value="${s.name}">${s.name}</option>`);
-    }
-    // المنتجات
-    ['saleProduct', 'purchaseProduct'].forEach(id => {
-        const sel = document.getElementById(id);
-        if (sel) {
-            const val = sel.value;
-            sel.innerHTML = '<option value="">اختر المنتج...</option>';
-            appData.products.forEach(p => sel.innerHTML += `<option value="${p.name}">${p.name} (${p.quantity})</option>`);
-            if (val) sel.value = val;
-        }
-    });
-    // فواتير البيع للمرتجعات
+    // تحديث قوائم المرتجعات
     const returnSaleSelect = document.getElementById('returnSaleInvoice');
     if (returnSaleSelect) {
         returnSaleSelect.innerHTML = '<option value="">اختر فاتورة بيع...</option>';
         appData.sales.forEach(s => returnSaleSelect.innerHTML += `<option value="${s.id}">#${s.id} - ${s.client} - ${s.product} (${s.qty})</option>`);
     }
-    // فواتير الشراء للمرتجعات
     const returnPurchaseSelect = document.getElementById('returnPurchaseInvoice');
     if (returnPurchaseSelect) {
         returnPurchaseSelect.innerHTML = '<option value="">اختر فاتورة شراء...</option>';
@@ -780,19 +798,145 @@ function updateDropdowns() {
 }
 
 function updateSaleStock() {
-    const sel = document.getElementById('saleProduct');
+    const productName = document.getElementById('saleProduct').value;
     const info = document.getElementById('saleStockInfo');
-    if (!sel || !info) return;
-    const prod = appData.products.find(p => p.name === sel.value);
+    if (!info) return;
+    const prod = appData.products.find(p => p.name === productName);
     info.textContent = prod ? `📦 المتوفر: ${prod.quantity}` : '📦 المتوفر: 0';
     info.style.background = prod && prod.quantity < 10 ? 'var(--danger)' : 'var(--primary-light)';
+    // تعيين سعر البيع تلقائياً
+    const priceInput = document.getElementById('salePrice');
+    if (prod && prod.sellPrice) priceInput.value = prod.sellPrice;
 }
 function updatePurchaseStock() {
-    const sel = document.getElementById('purchaseProduct');
+    const productName = document.getElementById('purchaseProduct').value;
     const info = document.getElementById('purchaseStockInfo');
-    if (!sel || !info) return;
-    const prod = appData.products.find(p => p.name === sel.value);
+    if (!info) return;
+    const prod = appData.products.find(p => p.name === productName);
     info.textContent = prod ? `📦 المتوفر: ${prod.quantity}` : '📦 المتوفر: 0';
+    // تعيين سعر الشراء تلقائياً
+    const priceInput = document.getElementById('purchasePrice');
+    if (prod && prod.buyPrice) priceInput.value = prod.buyPrice;
+}
+
+// ============================================================
+// 🔷 البحث في العملاء (مع اقتراحات)
+// ============================================================
+function showSaleClientSuggestions() {
+    const input = document.getElementById('saleClientSearch');
+    const suggestions = document.getElementById('saleClientSuggestions');
+    const term = input.value.trim();
+    if (!term) { suggestions.style.display = 'none'; return; }
+    const results = appData.clients.filter(c => c.name.toLowerCase().includes(term.toLowerCase()));
+    if (results.length === 0) { suggestions.style.display = 'none'; return; }
+    suggestions.style.display = 'block';
+    suggestions.innerHTML = results.map(c => `<div class="item" onclick="selectSaleClient('${c.name}')">${c.name} (رصيد: ${currencyFormat(c.balance || 0)})</div>`).join('');
+}
+function selectSaleClient(name) {
+    document.getElementById('saleClientSearch').value = name;
+    document.getElementById('saleClient').value = name;
+    document.getElementById('saleClientSuggestions').style.display = 'none';
+}
+function showSaleProductSuggestions() {
+    const input = document.getElementById('saleProductSearch');
+    const suggestions = document.getElementById('saleProductSuggestions');
+    const term = input.value.trim();
+    if (!term) { suggestions.style.display = 'none'; return; }
+    const results = appData.products.filter(p => p.name.toLowerCase().includes(term.toLowerCase()));
+    if (results.length === 0) { suggestions.style.display = 'none'; return; }
+    suggestions.style.display = 'block';
+    suggestions.innerHTML = results.map(p => `<div class="item" onclick="selectSaleProduct('${p.name}')">${p.name} (${p.quantity} قطعة - سعر البيع: ${currencyFormat(p.sellPrice)})</div>`).join('');
+}
+function selectSaleProduct(name) {
+    document.getElementById('saleProductSearch').value = name;
+    document.getElementById('saleProduct').value = name;
+    document.getElementById('saleProductSuggestions').style.display = 'none';
+    updateSaleStock();
+}
+
+// ============================================================
+// 🔷 البحث في الموردين والمشتريات
+// ============================================================
+function showPurchaseSupplierSuggestions() {
+    const input = document.getElementById('purchaseSupplierSearch');
+    const suggestions = document.getElementById('purchaseSupplierSuggestions');
+    const term = input.value.trim();
+    if (!term) { suggestions.style.display = 'none'; return; }
+    const results = appData.suppliers.filter(s => s.name.toLowerCase().includes(term.toLowerCase()));
+    if (results.length === 0) { suggestions.style.display = 'none'; return; }
+    suggestions.style.display = 'block';
+    suggestions.innerHTML = results.map(s => `<div class="item" onclick="selectPurchaseSupplier('${s.name}')">${s.name} (رصيد: ${currencyFormat(s.balance || 0)})</div>`).join('');
+}
+function selectPurchaseSupplier(name) {
+    document.getElementById('purchaseSupplierSearch').value = name;
+    document.getElementById('purchaseSupplier').value = name;
+    document.getElementById('purchaseSupplierSuggestions').style.display = 'none';
+}
+function showPurchaseProductSuggestions() {
+    const input = document.getElementById('purchaseProductSearch');
+    const suggestions = document.getElementById('purchaseProductSuggestions');
+    const term = input.value.trim();
+    if (!term) { suggestions.style.display = 'none'; return; }
+    const results = appData.products.filter(p => p.name.toLowerCase().includes(term.toLowerCase()));
+    if (results.length === 0) { suggestions.style.display = 'none'; return; }
+    suggestions.style.display = 'block';
+    suggestions.innerHTML = results.map(p => `<div class="item" onclick="selectPurchaseProduct('${p.name}')">${p.name} (${p.quantity} قطعة - سعر الشراء: ${currencyFormat(p.buyPrice)})</div>`).join('');
+}
+function selectPurchaseProduct(name) {
+    document.getElementById('purchaseProductSearch').value = name;
+    document.getElementById('purchaseProduct').value = name;
+    document.getElementById('purchaseProductSuggestions').style.display = 'none';
+    updatePurchaseStock();
+}
+
+// ============================================================
+// 🔷 الخزنة - عرض الرصيد والبحث
+// ============================================================
+function toggleCashierContact() {
+    const type = document.getElementById('cashierType').value;
+    const contactType = document.getElementById('cashierContactType');
+    if (type === 'إيداع') {
+        contactType.innerHTML = '<option value="client">عميل</option><option value="supplier">مورد</option>';
+    } else {
+        contactType.innerHTML = '<option value="client">عميل</option><option value="supplier">مورد</option>';
+    }
+    updateCashierBalanceDisplay();
+}
+
+function showCashierSuggestions() {
+    const input = document.getElementById('cashierContactSearch');
+    const suggestions = document.getElementById('cashierSuggestions');
+    const term = input.value.trim();
+    const contactType = document.getElementById('cashierContactType').value;
+    if (!term) { suggestions.style.display = 'none'; return; }
+    let results = [];
+    if (contactType === 'client') {
+        results = appData.clients.filter(c => c.name.toLowerCase().includes(term.toLowerCase()));
+    } else {
+        results = appData.suppliers.filter(s => s.name.toLowerCase().includes(term.toLowerCase()));
+    }
+    if (results.length === 0) { suggestions.style.display = 'none'; return; }
+    suggestions.style.display = 'block';
+    suggestions.innerHTML = results.map(item => `<div class="item" onclick="selectCashierContact('${item.name}', '${contactType}')">${item.name} (رصيد: ${currencyFormat(item.balance || 0)})</div>`).join('');
+}
+function selectCashierContact(name, type) {
+    document.getElementById('cashierContactSearch').value = name;
+    document.getElementById('cashierContactId').value = name;
+    document.getElementById('cashierSuggestions').style.display = 'none';
+    updateCashierBalanceDisplay();
+}
+function updateCashierBalanceDisplay() {
+    const name = document.getElementById('cashierContactSearch').value.trim();
+    const type = document.getElementById('cashierContactType').value;
+    let balance = 0;
+    if (type === 'client') {
+        const client = appData.clients.find(c => c.name === name);
+        if (client) balance = client.balance || 0;
+    } else {
+        const supplier = appData.suppliers.find(s => s.name === name);
+        if (supplier) balance = supplier.balance || 0;
+    }
+    document.getElementById('cashierContactBalance').textContent = `رصيد ${type === 'client' ? 'العميل' : 'المورد'}: ${currencyFormat(balance)}`;
 }
 
 // ============================================================
@@ -824,12 +968,39 @@ function addCashierTransaction() {
     const amount = document.getElementById('cashierAmount');
     const note = document.getElementById('cashierNote');
     const date = document.getElementById('cashierDate');
+    const contactName = document.getElementById('cashierContactSearch').value.trim();
+    const contactType = document.getElementById('cashierContactType').value;
+
     if (!amount.value || amount.value <= 0) { showToast('⚠️ أدخل المبلغ', 'warning'); return; }
     const val = parseFloat(amount.value);
     const balance = appData.cashier.filter(t => t.type === 'إيداع').reduce((s, t) => s + t.amount, 0) - appData.cashier.filter(t => t.type === 'سحب').reduce((s, t) => s + t.amount, 0);
     if (type === 'سحب' && val > balance) { showToast(`⚠️ الرصيد غير كافٍ (${currencyFormat(balance)})`, 'error'); return; }
-    appData.cashier.push({ id: generateId(), type, amount: val, note: note.value.trim() || type, date: date.value || new Date().toISOString().split('T')[0] });
-    saveData(); amount.value = ''; note.value = ''; renderAll(); showToast(`✅ تم ${type} ${currencyFormat(val)}`, 'success');
+
+    // تحديث رصيد العميل/المورد
+    if (contactName) {
+        if (contactType === 'client') {
+            const client = appData.clients.find(c => c.name === contactName);
+            if (client) {
+                if (type === 'إيداع') { // تحصيل من عميل
+                    client.balance = Math.max(0, (client.balance || 0) - val);
+                } else { // سداد لعميل
+                    client.balance = (client.balance || 0) + val;
+                }
+            }
+        } else {
+            const supplier = appData.suppliers.find(s => s.name === contactName);
+            if (supplier) {
+                if (type === 'إيداع') { // تسديد من مورد
+                    supplier.balance = Math.max(0, (supplier.balance || 0) - val);
+                } else { // دفع لمورد
+                    supplier.balance = (supplier.balance || 0) + val;
+                }
+            }
+        }
+    }
+
+    appData.cashier.push({ id: generateId(), type, amount: val, note: note.value.trim() || type, date: date.value || new Date().toISOString().split('T')[0], contact: contactName, contactType });
+    saveData(); amount.value = ''; note.value = ''; renderAll(); updateDropdowns(); showToast(`✅ تم ${type} ${currencyFormat(val)}`, 'success');
 }
 
 // ============================================================
@@ -849,16 +1020,13 @@ function addSale() {
     if (!prod || prod.quantity < qty) { showToast(`⚠️ الكمية غير متوفرة (المتاح: ${prod ? prod.quantity : 0})`, 'error'); return; }
 
     const total = qty * price * (1 - discount / 100);
-    // 1. تحديث المخزون
     prod.quantity -= qty;
-    // 2. تحديث رصيد العميل (آجل)
     if (payment === 'آجل') {
         const cl = appData.clients.find(c => c.name === client);
         if (cl) cl.balance = (cl.balance || 0) + total;
     }
-    // 3. تسجيل في الخزنة (نقدي)
     if (payment === 'نقدي') {
-        appData.cashier.push({ id: generateId(), type: 'إيداع', amount: total, note: `فاتورة بيع - ${client}`, date });
+        appData.cashier.push({ id: generateId(), type: 'إيداع', amount: total, note: `فاتورة بيع - ${client}`, date, contact: client, contactType: 'client' });
     }
     appData.sales.push({ id: generateId(), client, product, qty, price, discount, payment, date, total });
     saveData(); renderAll(); updateDropdowns(); showToast(`✅ تم إضافة فاتورة بيع ${currencyFormat(total)}`, 'success');
@@ -881,23 +1049,20 @@ function addPurchase() {
     if (!prod) { showToast('⚠️ المنتج غير موجود', 'error'); return; }
 
     const total = qty * price * (1 - discount / 100);
-    // 1. تحديث المخزون
     prod.quantity += qty;
-    // 2. تحديث رصيد المورد (آجل)
     if (payment === 'آجل') {
         const sp = appData.suppliers.find(s => s.name === supplier);
         if (sp) sp.balance = (sp.balance || 0) + total;
     }
-    // 3. تسجيل في الخزنة (نقدي)
     if (payment === 'نقدي') {
-        appData.cashier.push({ id: generateId(), type: 'سحب', amount: total, note: `فاتورة شراء - ${supplier}`, date });
+        appData.cashier.push({ id: generateId(), type: 'سحب', amount: total, note: `فاتورة شراء - ${supplier}`, date, contact: supplier, contactType: 'supplier' });
     }
     appData.purchases.push({ id: generateId(), supplier, product, qty, price, discount, payment, date, total });
     saveData(); renderAll(); updateDropdowns(); showToast(`✅ تم إضافة فاتورة شراء ${currencyFormat(total)}`, 'success');
 }
 
 // ============================================================
-// 🔷 مرتجعات المبيعات (ربط: المخزون ← العملاء ← الخزنة)
+// 🔷 المرتجعات (ربط: المخزون ← العملاء/الموردين ← الخزنة)
 // ============================================================
 function addReturnSale() {
     const invoiceId = document.getElementById('returnSaleInvoice').value;
@@ -911,17 +1076,14 @@ function addReturnSale() {
     if (qty > sale.qty) { showToast(`⚠️ كمية المرتجع ${qty} أكبر من الكمية المباعة ${sale.qty}`, 'error'); return; }
 
     const returnAmount = qty * sale.price * (1 - sale.discount / 100);
-    // 1. إرجاع المخزون
     const prod = appData.products.find(p => p.name === sale.product);
     if (prod) prod.quantity += qty;
-    // 2. تعديل رصيد العميل
     if (sale.payment === 'آجل') {
         const cl = appData.clients.find(c => c.name === sale.client);
         if (cl) cl.balance = Math.max(0, (cl.balance || 0) - returnAmount);
     }
-    // 3. تسجيل في الخزنة (سحب للمرتجع)
     if (sale.payment === 'نقدي') {
-        appData.cashier.push({ id: generateId(), type: 'سحب', amount: returnAmount, note: `مرتجع بيع - ${sale.client}`, date });
+        appData.cashier.push({ id: generateId(), type: 'سحب', amount: returnAmount, note: `مرتجع بيع - ${sale.client}`, date, contact: sale.client, contactType: 'client' });
     }
     sale.qty -= qty;
     if (sale.qty === 0) {
@@ -931,9 +1093,6 @@ function addReturnSale() {
     saveData(); renderAll(); updateDropdowns(); showToast(`✅ تم تسجيل مرتجع بيع ${currencyFormat(returnAmount)}`, 'success');
 }
 
-// ============================================================
-// 🔷 مرتجعات المشتريات (ربط: المخزون ← الموردين ← الخزنة)
-// ============================================================
 function addReturnPurchase() {
     const invoiceId = document.getElementById('returnPurchaseInvoice').value;
     const qty = parseFloat(document.getElementById('returnPurchaseQty').value) || 1;
@@ -946,17 +1105,14 @@ function addReturnPurchase() {
     if (qty > purchase.qty) { showToast(`⚠️ كمية المرتجع ${qty} أكبر من الكمية المشتراة ${purchase.qty}`, 'error'); return; }
 
     const returnAmount = qty * purchase.price * (1 - purchase.discount / 100);
-    // 1. خصم من المخزون
     const prod = appData.products.find(p => p.name === purchase.product);
     if (prod) prod.quantity = Math.max(0, prod.quantity - qty);
-    // 2. تعديل رصيد المورد
     if (purchase.payment === 'آجل') {
         const sp = appData.suppliers.find(s => s.name === purchase.supplier);
         if (sp) sp.balance = Math.max(0, (sp.balance || 0) - returnAmount);
     }
-    // 3. تسجيل في الخزنة (إيداع للمرتجع)
     if (purchase.payment === 'نقدي') {
-        appData.cashier.push({ id: generateId(), type: 'إيداع', amount: returnAmount, note: `مرتجع شراء - ${purchase.supplier}`, date });
+        appData.cashier.push({ id: generateId(), type: 'إيداع', amount: returnAmount, note: `مرتجع شراء - ${purchase.supplier}`, date, contact: purchase.supplier, contactType: 'supplier' });
     }
     purchase.qty -= qty;
     if (purchase.qty === 0) {
@@ -967,7 +1123,7 @@ function addReturnPurchase() {
 }
 
 // ============================================================
-// 🔷 العرض (Render)
+// 🔷 العرض (Render) مع البحث الفوري
 // ============================================================
 function renderAll() {
     renderClients();
@@ -985,8 +1141,11 @@ function renderAll() {
 
 function renderClients() {
     const c = document.getElementById('clientList');
-    if (appData.clients.length === 0) { c.innerHTML = '<div class="empty-state"><i class="fas fa-users"></i>لا يوجد عملاء</div>'; return; }
-    c.innerHTML = appData.clients.map(cl => `
+    const search = document.getElementById('clientSearch')?.value.trim() || '';
+    let clients = appData.clients;
+    if (search) clients = clients.filter(cl => cl.name.toLowerCase().includes(search.toLowerCase()));
+    if (clients.length === 0) { c.innerHTML = '<div class="empty-state"><i class="fas fa-users"></i>لا يوجد عملاء</div>'; return; }
+    c.innerHTML = clients.map(cl => `
         <div class="list-item">
             <div class="info"><span class="title">${cl.name}</span><div class="sub">📞 ${cl.phone || ''} | 📍 ${cl.address || ''} | الرصيد: ${currencyFormat(cl.balance || 0)}</div></div>
             <div class="actions"><button onclick="deleteClient(${cl.id})" title="حذف"><i class="fas fa-trash"></i></button></div>
@@ -995,8 +1154,11 @@ function renderClients() {
 }
 function renderSuppliers() {
     const c = document.getElementById('supplierList');
-    if (appData.suppliers.length === 0) { c.innerHTML = '<div class="empty-state"><i class="fas fa-truck"></i>لا يوجد موردين</div>'; return; }
-    c.innerHTML = appData.suppliers.map(sp => `
+    const search = document.getElementById('supplierSearch')?.value.trim() || '';
+    let suppliers = appData.suppliers;
+    if (search) suppliers = suppliers.filter(s => s.name.toLowerCase().includes(search.toLowerCase()));
+    if (suppliers.length === 0) { c.innerHTML = '<div class="empty-state"><i class="fas fa-truck"></i>لا يوجد موردين</div>'; return; }
+    c.innerHTML = suppliers.map(sp => `
         <div class="list-item">
             <div class="info"><span class="title">${sp.name}</span><div class="sub">📞 ${sp.phone || ''} | 📍 ${sp.address || ''} | الرصيد: ${currencyFormat(sp.balance || 0)}</div></div>
             <div class="actions"><button onclick="deleteSupplier(${sp.id})" title="حذف"><i class="fas fa-trash"></i></button></div>
@@ -1005,8 +1167,11 @@ function renderSuppliers() {
 }
 function renderProducts() {
     const c = document.getElementById('productList');
-    if (appData.products.length === 0) { c.innerHTML = '<div class="empty-state"><i class="fas fa-boxes"></i>لا توجد منتجات</div>'; return; }
-    c.innerHTML = appData.products.map(p => `
+    const search = document.getElementById('productSearch')?.value.trim() || '';
+    let products = appData.products;
+    if (search) products = products.filter(p => p.name.toLowerCase().includes(search.toLowerCase()));
+    if (products.length === 0) { c.innerHTML = '<div class="empty-state"><i class="fas fa-boxes"></i>لا توجد منتجات</div>'; return; }
+    c.innerHTML = products.map(p => `
         <div class="list-item">
             <div class="info"><span class="title">${p.name}</span><div class="sub">📦 الكمية: ${p.quantity} | 💰 شراء: ${currencyFormat(p.buyPrice)} | 💵 بيع: ${currencyFormat(p.sellPrice)}</div></div>
             <div class="actions"><button onclick="deleteProduct(${p.id})" title="حذف"><i class="fas fa-trash"></i></button></div>
@@ -1024,15 +1189,18 @@ function renderCashier() {
     if (appData.cashier.length === 0) { c.innerHTML = '<div class="empty-state"><i class="fas fa-money-bill-wave"></i>لا توجد حركات</div>'; return; }
     c.innerHTML = appData.cashier.map(t => `
         <div class="list-item">
-            <div class="info"><span class="title" style="color:${t.type === 'إيداع' ? 'var(--secondary)' : 'var(--danger)'};">${t.type === 'إيداع' ? '📥' : '📤'} ${t.type}</span><div class="sub">💰 ${currencyFormat(t.amount)} | 📝 ${t.note || ''} | 📅 ${formatDate(t.date)}</div></div>
+            <div class="info"><span class="title" style="color:${t.type === 'إيداع' ? 'var(--secondary)' : 'var(--danger)'};">${t.type === 'إيداع' ? '📥' : '📤'} ${t.type} ${t.contact ? ' - ' + t.contact : ''}</span><div class="sub">💰 ${currencyFormat(t.amount)} | 📝 ${t.note || ''} | 📅 ${formatDate(t.date)}</div></div>
             <div class="actions"><span class="amount" style="color:${t.type === 'إيداع' ? 'var(--secondary)' : 'var(--danger)'};">${t.type === 'إيداع' ? '+' : '-'} ${currencyFormat(t.amount)}</span><button onclick="deleteCashier(${t.id})"><i class="fas fa-trash"></i></button></div>
         </div>
     `).join('');
 }
 function renderSales() {
     const c = document.getElementById('saleList');
-    if (appData.sales.length === 0) { c.innerHTML = '<div class="empty-state"><i class="fas fa-file-invoice"></i>لا توجد فواتير بيع</div>'; return; }
-    c.innerHTML = appData.sales.map(s => `
+    const search = document.getElementById('saleSearch')?.value.trim() || '';
+    let sales = appData.sales;
+    if (search) sales = sales.filter(s => s.client.toLowerCase().includes(search.toLowerCase()) || s.product.toLowerCase().includes(search.toLowerCase()));
+    if (sales.length === 0) { c.innerHTML = '<div class="empty-state"><i class="fas fa-file-invoice"></i>لا توجد فواتير بيع</div>'; return; }
+    c.innerHTML = sales.map(s => `
         <div class="list-item">
             <div class="info"><span class="title">👤 ${s.client}</span><div class="sub">📦 ${s.product} | ${s.qty} × ${currencyFormat(s.price)} = ${currencyFormat(s.total)} | 💳 ${s.payment} | 📅 ${formatDate(s.date)}</div></div>
             <div class="actions"><button onclick="deleteSale(${s.id})"><i class="fas fa-trash"></i></button></div>
@@ -1041,8 +1209,11 @@ function renderSales() {
 }
 function renderPurchases() {
     const c = document.getElementById('purchaseList');
-    if (appData.purchases.length === 0) { c.innerHTML = '<div class="empty-state"><i class="fas fa-shopping-cart"></i>لا توجد فواتير شراء</div>'; return; }
-    c.innerHTML = appData.purchases.map(p => `
+    const search = document.getElementById('purchaseSearch')?.value.trim() || '';
+    let purchases = appData.purchases;
+    if (search) purchases = purchases.filter(p => p.supplier.toLowerCase().includes(search.toLowerCase()) || p.product.toLowerCase().includes(search.toLowerCase()));
+    if (purchases.length === 0) { c.innerHTML = '<div class="empty-state"><i class="fas fa-shopping-cart"></i>لا توجد فواتير شراء</div>'; return; }
+    c.innerHTML = purchases.map(p => `
         <div class="list-item">
             <div class="info"><span class="title">🏢 ${p.supplier}</span><div class="sub">📦 ${p.product} | ${p.qty} × ${currencyFormat(p.price)} = ${currencyFormat(p.total)} | 💳 ${p.payment} | 📅 ${formatDate(p.date)}</div></div>
             <div class="actions"><button onclick="deletePurchase(${p.id})"><i class="fas fa-trash"></i></button></div>
@@ -1079,7 +1250,6 @@ function updateDashboard() {
     document.getElementById('homePurchases').textContent = currencyFormat(totalPurchases);
     document.getElementById('homeProfit').textContent = currencyFormat(totalSales - totalPurchases);
     document.getElementById('homeCashier').textContent = currencyFormat(balance);
-    // تحديث ملخص الذكاء الاصطناعي
     updateAISummary(totalSales, totalPurchases, balance);
     drawCharts();
 }
@@ -1144,7 +1314,7 @@ function drawCharts() {
 }
 
 // ============================================================
-// 🔷 التقارير المحاسبية (ميزان المراجعة، قائمة الدخل، الميزانية، التدفق النقدي)
+// 🔷 التقارير المحاسبية
 // ============================================================
 function showAccountingReport(type) {
     const c = document.getElementById('accountingReport');
@@ -1229,7 +1399,7 @@ function printReport() {
     const container = document.getElementById('reportContainer');
     const win = window.open('', '_blank', 'width=800,height=600');
     if (!win) return;
-    win.document.write(`<!DOCTYPE html><html dir="rtl"><head><meta charset="UTF-8"><title>تقرير</title><style>body{font-family:Segoe UI;padding:20px;}table{width:100%;border-collapse:collapse;}th{background:#6C5CE7;color:white;padding:8px;text-align:right;}td{padding:8px;border-bottom:1px solid #ddd;}h4{color:#6C5CE7;}</style></head><body><h2>📊 تقرير - نظام راشد V11</h2>${container.innerHTML}<script>window.onload=function(){setTimeout(function(){window.print();setTimeout(function(){window.close();},1000);},300);}<\/script></body></html>`);
+    win.document.write(`<!DOCTYPE html><html dir="rtl"><head><meta charset="UTF-8"><title>تقرير</title><style>body{font-family:Segoe UI;padding:20px;}table{width:100%;border-collapse:collapse;}th{background:#6C5CE7;color:white;padding:8px;text-align:right;}td{padding:8px;border-bottom:1px solid #ddd;}h4{color:#6C5CE7;}</style></head><body><h2>📊 تقرير - نظام راشد V12</h2>${container.innerHTML}<script>window.onload=function(){setTimeout(function(){window.print();setTimeout(function(){window.close();},1000);},300);}<\/script></body></html>`);
     win.document.close();
 }
 
@@ -1280,7 +1450,7 @@ function runAIAnalysis() {
 }
 
 // ============================================================
-// 🔷 السحابة (Firebase) - ربط كل البيانات
+// 🔷 السحابة (Firebase)
 // ============================================================
 let firebaseDB = null;
 let firebaseReady = false;
@@ -1444,28 +1614,17 @@ function addSyncLog(msg) {
 // ============================================================
 // 🔷 نظام الدفع
 // ============================================================
-function showPayment() {
-    document.getElementById('paymentModal').classList.add('active');
-}
-function closePayment() {
-    document.getElementById('paymentModal').classList.remove('active');
-}
+function showPayment() { document.getElementById('paymentModal').classList.add('active'); }
+function closePayment() { document.getElementById('paymentModal').classList.remove('active'); }
 function processPayment(method) {
-    if (method === 'credit') {
-        showToast('💳 بطاقة ائتمان - قريباً تحت الإنشاء 🚧', 'warning');
-        return;
-    }
+    if (method === 'credit') { showToast('💳 بطاقة ائتمان - قريباً تحت الإنشاء 🚧', 'warning'); return; }
     const paymentInfo = method === 'vodafone' ? '📱 فودافون كاش رقم: 01011993799' : '🏦 إنستاباي: rashedrabia@instapay';
     if (confirm(`✅ ${paymentInfo}\n\nهل تريد المتابعة للدفع؟`)) {
         if (navigator.clipboard) {
             const text = method === 'vodafone' ? '01011993799' : 'rashedrabia@instapay';
             navigator.clipboard.writeText(text).then(() => showToast('✅ تم النسخ للحافظة', 'success'));
         }
-        setTimeout(() => {
-            localStorage.setItem('userPlan', 'premium');
-            showToast('🎉 تم تفعيل الباقة المميزة', 'success');
-            closePayment();
-        }, 3000);
+        setTimeout(() => { localStorage.setItem('userPlan', 'premium'); showToast('🎉 تم تفعيل الباقة المميزة', 'success'); closePayment(); }, 3000);
     }
 }
 
@@ -1538,7 +1697,7 @@ function toggleTheme() {
     document.querySelector('.theme-toggle i').className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
     showToast(theme === 'dark' ? '🌙 وضع مظلم' : '☀️ وضع فاتح', 'success');
 }
-function handleBrandClick() { showToast('👑 نظام راشد المحاسبي V11', 'info'); }
+function handleBrandClick() { showToast('👑 نظام راشد المحاسبي V12', 'info'); }
 function closeModal() { document.getElementById('modalOverlay').classList.remove('active'); }
 
 // ============================================================
@@ -1546,7 +1705,6 @@ function closeModal() { document.getElementById('modalOverlay').classList.remove
 // ============================================================
 loadData();
 
-// تسجيل الدخول التلقائي
 const savedUser = localStorage.getItem('rememberedUser');
 if (savedUser && appData.users[savedUser]) {
     appData.currentUser = savedUser;
@@ -1554,7 +1712,6 @@ if (savedUser && appData.users[savedUser]) {
     setTimeout(() => { if (appData.currentUser) enterApp(); }, 200);
 }
 
-// تهيئة Firebase في الخلفية
 setTimeout(() => {
     initFirebase();
     if (appData.cloudUserId) {
@@ -1565,7 +1722,9 @@ setTimeout(() => {
     }
 }, 1000);
 
-console.log('🏆 نظام راشد المحاسبي V11 - المتكامل');
+console.log('🏆 نظام راشد المحاسبي V12 - المتكامل');
+console.log('✅ البحث الفوري في كل الأقسام');
+console.log('✅ عرض الأسعار والأرصدة تلقائياً');
 console.log('✅ الربط الكامل بين المبيعات والمشتريات والمرتجعات والمخزون والعملاء والموردين والخزنة');
 console.log('✅ التقارير المحاسبية المتكاملة');
 console.log('✅ الذكاء الاصطناعي للتحليل المالي');
