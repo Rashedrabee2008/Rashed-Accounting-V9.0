@@ -1,0 +1,5 @@
+- name: Deploy to GitHub Pages
+  uses: actions/deploy-pages@v5
+  with:
+    timeout: 600000  # زيادة المهلة
+    error_count: 5   # عدد المحاولات
