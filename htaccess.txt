@@ -1,0 +1,34 @@
+# ============================================================
+# .htaccess - إعدادات السيرفر
+# ============================================================
+
+# تفعيل التخزين المؤقت
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType text/html "access plus 1 hour"
+    ExpiresByType text/css "access plus 1 week"
+    ExpiresByType text/javascript "access plus 1 week"
+    ExpiresByType application/javascript "access plus 1 week"
+    ExpiresByType image/webp "access plus 1 month"
+    ExpiresByType image/png "access plus 1 month"
+    ExpiresByType image/jpeg "access plus 1 month"
+</IfModule>
+
+# ضغط الملفات
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/css text/javascript application/javascript application/json
+</IfModule>
+
+# الصفحة الرئيسية
+DirectoryIndex index.html
+
+# منع عرض قائمة الملفات
+Options -Indexes
+
+# إعادة التوجيه لـ HTTPS
+RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
+
+# معالجة خطأ 404
+ErrorDocument 404 /index.html

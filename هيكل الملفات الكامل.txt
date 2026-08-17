@@ -1,0 +1,46 @@
+📁 نظام راشد المحاسبي V10.0/
+│
+├── 📄 index.html                    (الملف الرئيسي - 500 سطر فقط)
+│
+├── 📁 css/
+│   ├── 📄 style.css                 (الأنماط الأساسية)
+│   ├── 📄 mobile.css                (تحسينات الموبايل)
+│   └── 📄 dark-theme.css            (الوضع المظلم)
+│
+├── 📁 js/
+│   ├── 📄 app.js                    (التطبيق الرئيسي)
+│   ├── 📄 auth.js                   (المصادقة)
+│   ├── 📄 data.js                   (البيانات الأساسية)
+│   ├── 📄 helpers.js                (الدوال المساعدة)
+│   ├── 📄 clients.js                (إدارة العملاء)
+│   ├── 📄 suppliers.js              (إدارة الموردين)
+│   ├── 📄 both.js                   (كليهما)
+│   ├── 📄 cashier.js                (الخزنة)
+│   ├── 📄 sales.js                  (المبيعات)
+│   ├── 📄 purchases.js              (المشتريات)
+│   ├── 📄 products.js               (المخزون)
+│   ├── 📄 expenses.js               (المصروفات)
+│   ├── 📄 tasks.js                  (المهام)
+│   ├── 📄 employees.js              (الموظفين)
+│   ├── 📄 advances.js               (السلف)
+│   ├── 📄 debts.js                  (الديون)
+│   ├── 📄 taxes.js                  (الضرائب)
+│   ├── 📄 accounting.js             (المحاسبة)
+│   ├── 📄 reports.js                (التقارير)
+│   ├── 📄 charts.js                 (الرسوم البيانية)
+│   ├── 📄 cloud.js                  (السحابة - Firebase)
+│   ├── 📄 profile.js                (الملف الشخصي)
+│   ├── 📄 print.js                  (الطباعة)
+│   ├── 📄 installments.js           (نظام التقسيط - جديد)
+│   ├── 📄 notifications.js          (نظام الإشعارات - جديد)
+│   ├── 📄 currencies.js             (نظام العملات - جديد)
+│   ├── 📄 branches.js               (نظام الفروع - جديد)
+│   ├── 📄 roles.js                  (نظام الصلاحيات - جديد)
+│   ├── 📄 attachments.js            (نظام المرفقات - جديد)
+│   └── 📄 payments.js               (نظام الدفع الإلكتروني - جديد)
+│
+└── 📁 modules/
+    ├── 📄 clients-module.js         (وحدة العملاء)
+    ├── 📄 suppliers-module.js       (وحدة الموردين)
+    ├── 📄 cashier-module.js         (وحدة الخزنة)
+    └── 📄 reports-module.js         (وحدة التقارير)
