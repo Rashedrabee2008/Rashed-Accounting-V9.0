@@ -15,6 +15,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
     <style>
+        /* ===== جميع الأنماط ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
             --primary: #6C5CE7; --primary-dark: #4834B5; --primary-light: #A29BFE;
@@ -648,6 +649,7 @@
 // ============================================================
 // 🚀 نظام راشد المحاسبي V15 - الملف الكامل المتكامل
 // ============================================================
+console.log('🏆 نظام راشد المحاسبي V15 - جارٍ التحميل...');
 
 // ============================================================
 // 🔷 البيانات الأساسية
@@ -685,7 +687,6 @@ function showToast(msg, type = 'info') {
     t.className = 'toast show ' + type;
     clearTimeout(t._timeout);
     t._timeout = setTimeout(() => t.classList.remove('show'), 3500);
-    // إشعار سطح المكتب
     if ('Notification' in window && Notification.permission === 'granted') {
         new Notification('نظام راشد المحاسبي', { body: msg, icon: '👑' });
     }
@@ -710,6 +711,7 @@ function loadData() {
             appData.userProfiles['admin'] = { fullName: 'مدير النظام', phone: '', address: '' };
         }
         saveData();
+        console.log('✅ تم إنشاء مستخدم admin افتراضي');
     }
     seedData();
 }
@@ -729,6 +731,7 @@ function seedData() {
         appData.cashier = [{ id: 1, treasuryId: 1, type: 'إيداع', amount: 500, note: 'رصيد افتتاحي', date: getToday(), contact: '', contactType: '', category: '' }];
     }
     saveData();
+    console.log('✅ تم تحميل البيانات الأولية');
 }
 
 // ============================================================
@@ -748,12 +751,8 @@ document.getElementById('confirmNo').onclick = function() {
     document.getElementById('confirmDialog').classList.remove('active');
     confirmCallback = null;
 };
-// إغلاق بالضغط خارج النافذة
 document.getElementById('confirmDialog').onclick = function(e) {
-    if (e.target === this) {
-        this.classList.remove('active');
-        confirmCallback = null;
-    }
+    if (e.target === this) { this.classList.remove('active'); confirmCallback = null; }
 };
 
 // ============================================================
@@ -780,7 +779,6 @@ function handleLogin() {
     const hash = simpleHash(p);
     if (appData.users[u] && appData.users[u] === hash) {
         appData.currentUser = u;
-        // حفظ الجلسة
         localStorage.setItem('rememberedUser', u);
         saveData();
         enterApp();
@@ -849,10 +847,11 @@ function enterApp() {
     renderAll();
     updateDropdowns();
     updateCloudUI();
+    console.log('✅ تم الدخول إلى التطبيق');
 }
 
 // ============================================================
-// 🔷 الخزنات (محفوظة)
+// 🔷 الخزنات
 // ============================================================
 function renderTreasuries() {
     const container = document.getElementById('treasuriesContainer');
@@ -894,7 +893,7 @@ function deleteTreasury(id) {
 }
 
 // ============================================================
-// 🔷 تحصيل من عميل وسداد لمورد (محفوظة مع تحسين الرسائل)
+// 🔷 تحصيل من عميل وسداد لمورد
 // ============================================================
 function showCollectClientSuggestions() {
     const input = document.getElementById('collectClientSearch');
@@ -982,7 +981,7 @@ function paySupplier() {
 }
 
 // ============================================================
-// 🔷 عمليات الخزنة الأساسية (محفوظة)
+// 🔷 عمليات الخزنة الأساسية
 // ============================================================
 function addCashierOperation() {
     const treasuryId = parseInt(document.getElementById('cashierTreasury').value);
@@ -1010,7 +1009,7 @@ function addCashierOperation() {
 }
 
 // ============================================================
-// 🔷 التحويل بين الخزنات (محفوظ)
+// 🔷 التحويل بين الخزنات
 // ============================================================
 function addTransfer() {
     const fromId = parseInt(document.getElementById('transferFrom').value);
@@ -1058,7 +1057,6 @@ function addSale() {
     if (payment === 'آجل') { const cl = appData.clients.find(c => c.name === client); if (cl) cl.balance = (cl.balance || 0) + total; }
     if (payment === 'نقدي' && treasuryId) { const treasury = appData.treasuries.find(t => t.id === treasuryId); if (treasury) treasury.balance += total; appData.cashier.push({ id: generateId(), treasuryId, type: 'إيداع', amount: total, note: `فاتورة بيع - ${client}`, date, contact: client, contactType: 'client', category: '' }); }
     appData.sales.push({ id: generateId(), client, product, qty, price, discount, payment, date, total, treasuryId, note });
-    // تنبيه المخزون
     checkLowStock();
     saveData(); renderAll(); updateDropdowns();
     showToast(`✅ تم إضافة فاتورة بيع ${currencyFormat(total)} بنجاح`, 'success');
@@ -1090,7 +1088,7 @@ function addPurchase() {
 }
 
 // ============================================================
-// 🔷 المرتجعات (محفوظة)
+// 🔷 المرتجعات
 // ============================================================
 function addReturnSale() {
     const invoiceId = document.getElementById('returnSaleInvoice').value;
@@ -1134,7 +1132,7 @@ function addReturnPurchase() {
 }
 
 // ============================================================
-// 🔷 البحث الفوري (محفوظ مع تحسين)
+// 🔷 البحث الفوري
 // ============================================================
 function showSaleClientSuggestions() {
     const input = document.getElementById('saleClientSearch');
@@ -1210,8 +1208,6 @@ function checkLowStock() {
     if (lowItems.length > 0) {
         alertEl.style.display = 'block';
         alertEl.innerHTML = `<i class="fas fa-exclamation-triangle"></i> تنبيه: ${lowItems.length} منتج منخفض المخزون (أقل من ${lowItems[0].minStock || 10} قطع)!`;
-        // إشعار إضافي
-        showToast(`⚠️ تنبيه: ${lowItems.length} منتج منخفض المخزون`, 'warning');
     } else {
         alertEl.style.display = 'none';
     }
@@ -1247,7 +1243,7 @@ function updateDropdowns() {
 }
 
 // ============================================================
-// 🔷 العرض (Render)
+// 🔷 العرض (Render) - جميع الدوال
 // ============================================================
 function renderAll() {
     renderClients();
@@ -1376,7 +1372,6 @@ function printInvoice(id, type) {
     const title = type === 'sale' ? 'فاتورة بيع' : 'فاتورة شراء';
     const party = type === 'sale' ? item.client : item.supplier;
     const partyLabel = type === 'sale' ? 'العميل' : 'المورد';
-    const total = item.total;
     const win = window.open('', '_blank', 'width=800,height=600');
     if (!win) return;
     win.document.write(`
@@ -1425,7 +1420,7 @@ function printInvoice(id, type) {
 }
 
 // ============================================================
-// 🔷 لوحة المعلومات
+// 🔷 لوحة المعلومات و KPI
 // ============================================================
 function updateDashboard() {
     document.getElementById('totalClients').textContent = toArabic(appData.clients.length);
@@ -1610,7 +1605,7 @@ function printReport() {
 }
 
 // ============================================================
-// 🔷 الذكاء الاصطناعي (محفوظ مع تحسين)
+// 🔷 الذكاء الاصطناعي
 // ============================================================
 function runAIAnalysis() {
     const container = document.getElementById('aiAnalysis');
@@ -1645,7 +1640,7 @@ function runAIAnalysis() {
 }
 
 // ============================================================
-// 🔷 السحابة (Firebase) - محفوظة
+// 🔷 السحابة (Firebase)
 // ============================================================
 let firebaseDB = null, firebaseReady = false, _cloudUserId = '', syncInterval = null, isSyncing = false;
 function initFirebase() {
@@ -1748,7 +1743,7 @@ function addSyncLog(msg) {
 }
 
 // ============================================================
-// 🔷 نظام الدفع (محفوظ)
+// 🔷 نظام الدفع
 // ============================================================
 function showPayment() { document.getElementById('paymentModal').classList.add('active'); }
 function closePayment() { document.getElementById('paymentModal').classList.remove('active'); }
@@ -1765,7 +1760,7 @@ function processPayment(method) {
 }
 
 // ============================================================
-// 🔷 الحذف مع تأكيد (جميع الدوال تستخدم التأكيد)
+// 🔷 الحذف مع تأكيد
 // ============================================================
 function deleteClient(id) {
     showConfirmDialog('هل أنت متأكد من حذف هذا العميل؟', function() {
@@ -1811,7 +1806,7 @@ function deletePurchase(id) {
 }
 
 // ============================================================
-// 🔷 النسخ الاحتياطي والاستعادة (محفوظ)
+// 🔷 النسخ الاحتياطي والاستعادة
 // ============================================================
 function backupData() {
     const data = JSON.stringify(appData, null, 2);
@@ -1895,7 +1890,7 @@ setTimeout(() => {
     }
 }, 1000);
 
-console.log('🏆 نظام راشد المحاسبي V15 - المتكامل مع التحسينات');
+console.log('🏆 نظام راشد المحاسبي V15 - تم التحميل بالكامل');
 console.log('✅ تأكيد الحذف');
 console.log('✅ حفظ الجلسة');
 console.log('✅ تحسين الرسائل');
@@ -1904,6 +1899,7 @@ console.log('✅ طباعة الفواتير');
 console.log('✅ تقارير الأرباح');
 console.log('✅ تنبيهات المخزون');
 console.log('✅ ملاحظات الفواتير');
+console.log('✅ الخزنات والتحصيل والسداد');
 console.log('🔑 admin / 123456');
 </script>
 </body>
